@@ -1,0 +1,3 @@
+dev_docker_sql/mysql_data/
+target/
+*.log

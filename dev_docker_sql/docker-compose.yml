@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-university
+    environment:
+      MYSQL_ROOT_PASSWORD: v2_8ddf5gd!jt5ty843!(Q@HQ!@MXQ83794t8Q@&4t87Q
+      MYSQL_DATABASE: universitydb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
