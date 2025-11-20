@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lecturer - University UI</title>
+  <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Lecturer Portal</div>
+  <nav class="nav">
+    <span th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+    <a th:href="@{/ui/logout}">
+      <button class="danger">Đăng xuất</button>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <section class="card form">
+    <h3>Nhập / sửa điểm sinh viên</h3>
+    <form th:action="@{/ui/lecturer/grade}" method="post">
+      <div class="row">
+        <label>Mã SV
+          <input name="maSv" placeholder="SV..." required>
+        </label>
+        <label>Mã môn
+          <input name="maMon" placeholder="CT101" required>
+        </label>
+        <label>Mã kỳ
+          <input name="maKy" placeholder="2025-1" required>
+        </label>
+      </div>
+      <div class="row">
+        <label>Điểm QT
+          <input name="diemQt" type="number" step="0.01" min="0" max="10" value="7.0" required>
+        </label>
+        <label>Điểm GK
+          <input name="diemGk" type="number" step="0.01" min="0" max="10" value="6.5" required>
+        </label>
+        <label>Điểm CK
+          <input name="diemCk" type="number" step="0.01" min="0" max="10" value="7.5" required>
+        </label>
+      </div>
+      <button type="submit">Ghi điểm</button>
+    </form>
+    <p class="msg" style="color:#22c55e" th:text="${gradeOk}"></p>
+    <p class="msg" style="color:#f97316" th:text="${gradeError}"></p>
+    <p class="hint">Lưu ý: chỉ ghi được điểm nếu bạn được phân công vào môn/kỳ đó (giangvien_monhockyhoc).</p>
+  </section>
+</main>
+</body>
+</html>

@@ -86,7 +86,7 @@ public class CourseJdbcRepository {
                     s.setAddress(rs.getString("dia_chi"));
                     s.setPhone(rs.getString("so_dien_thoai"));
                     s.setEmail(rs.getString("email"));
-                    s.setDepartmentID(rs.getString("ma_khoa"));
+                    s.setMajorID(rs.getString("ma_nganh_hoc"));
                     list.add(s);
                 }
             }

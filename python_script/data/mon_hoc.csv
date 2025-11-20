@@ -1,0 +1,240 @@
+ma_mon,ten_mon,so_tin_chi,ma_khoa
+CB_ENG0,Tiếng Anh Course 0,4,CB
+CB_ENG1,Tiếng Anh Course 1,4,CB
+CB_ENG2,Tiếng Anh Course 2,4,CB
+CB_ENG3,Tiếng Anh Course 3,4,CB
+CB_ENG3P,Tiếng Anh Course 3 Plus,2,CB
+CB_EN_CLC1,Tiếng Anh (Course 1 CLC),8,CB
+CB_EN_CLC2,Tiếng Anh (Course 2 CLC),8,CB
+CB_EN_CLC3,Tiếng Anh (Course 3 CLC),8,CB
+CB_EN_A11A21,Tiếng Anh A11/A21,3,CB
+CB_EN_A12A22,Tiếng Anh A12/A22,4,CB
+CB_EN_A21B11,Tiếng Anh A21/B11,3,CB
+CB_EN_A22B12,Tiếng Anh A22/B12,4,CB
+CB_DAI_SO,Đại số,3,CB
+CB_GIAI_TICH1,Giải tích 1,3,CB
+CB_GIAI_TICH2,Giải tích 2,3,CB
+CB_TOAN_CAO_CAP1,Toán cao cấp 1,2,CB
+CB_TOAN_CAO_CAP2,Toán cao cấp 2,2,CB
+CB_TOAN_KY_THUAT,Toán kỹ thuật,3,CB
+CB_TOAN_ROI_RAC1,Toán rời rạc 1,3,CB
+CB_TOAN_ROI_RAC2,Toán rời rạc 2,3,CB
+CB_TOAN_KINH_TE,Toán kinh tế,3,CB
+CB_XAC_SUAT_THONG_KE,Xác suất thống kê,2,CB
+CB_LY_THUYET_XS,Lý thuyết xác suất,2,CB
+CB_VAT_LY1,Vật lý 1 và thí nghiệm,4,CB
+CB_VAT_LY2,Vật lý 2 và thí nghiệm,4,CB
+CB_VAT_LY3,Vật lý 3 và thí nghiệm,4,CB
+CB_VAT_LY_UD,Vật lý ứng dụng,4,CB
+CB_TRIET_ML,Triết học Mác-Lênin,3,CB
+CB_KTCT_ML,Kinh tế chính trị Mác-Lênin,2,CB
+CB_CN_XH_KH,Chủ nghĩa xã hội khoa học,2,CB
+CB_TTHCM,Tư tưởng Hồ Chí Minh,2,CB
+CB_LS_DANG,Lịch sử Đảng Cộng sản Việt Nam,2,CB
+CB_PL_DAI_CUONG,Pháp luật đại cương,2,CB
+CB_CO_SO_VH_VN,Cơ sở văn hóa Việt Nam,2,CB
+CB_LS_VAN_MINH,Lịch sử văn minh thế giới,2,CB
+CB_TAM_LY_QL,Tâm lý quản lý,2,CB
+CB_PHUONG_PHAP_NCKH,Phương pháp luận NCKH,2,CB
+CB_KINH_TE_HOC_DAI_CUONG,Kinh tế học đại cương,4,CB
+CB_GDTC1,Giáo dục thể chất 1,2,CB
+CB_GDTC2,Giáo dục thể chất 2,2,CB
+CB_GDQP,Giáo dục quốc phòng,8,CB
+CB_KY_NANG_MEM1,Môn kỹ năng mềm 1,1,CB
+CB_KY_NANG_MEM2,Môn kỹ năng mềm 2,1,CB
+CB_KY_NANG_MEM3,Môn kỹ năng mềm 3,1,CB
+CNTT_NM_TIN_HOC_ATTT,Nhập môn tin học và ATTT,3,CNTT
+CNTT_NM_TIN_HOC_LAP_TRINH,Nhập môn tin học và lập trình,3,CNTT
+CNTT_NM_LAP_TRINH_PY,Nhập môn lập trình với Python,3,CNTT
+CNTT_LAP_TRINH_PY_CO_BAN,Lập trình Python cơ bản,3,CNTT
+CNTT_LAP_TRINH_SCRIPT,Lập trình với ngôn ngữ Script,3,CNTT
+CNTT_CTDL_GT,Cấu trúc dữ liệu và giải thuật,3,CNTT
+CNTT_LAP_TRINH_OOP,Lập trình hướng đối tượng,3,CNTT
+CNTT_LAP_TRINH_WEB,Lập trình Web,3,CNTT
+CNTT_LAP_TRINH_WEB_NC,Lập trình web nâng cao,3,CNTT
+CNTT_CO_SO_DU_LIEU,Cơ sở dữ liệu,3,CNTT
+CNTT_HQTCSDL,Hệ quản trị cơ sở dữ liệu,3,CNTT
+CNTT_HQTCSDL_NANG_CAO,Hệ quản trị cơ sở dữ liệu nâng cao,3,CNTT
+CNTT_CSDL_PHAN_TAN,Cơ sở dữ liệu phân tán,3,CNTT
+CNTT_HE_DIEU_HANH,Hệ điều hành,3,CNTT
+CNTT_HD_WIN_LINUX,Hệ điều hành Windows và Linux/Unix,3,CNTT
+CNTT_KIEN_TRUC_MT,Kiến trúc máy tính,3,CNTT
+CNTT_MANG_MAY_TINH,Mạng máy tính,3,CNTT
+CNTT_MANG_MAY_TINH_CCNA,Mạng máy tính theo CCNA,4,CNTT
+CNTT_NM_CNPM,Nhập môn công nghệ phần mềm,3,CNTT
+CNTT_KIEN_TRUC_THIET_KE_PM,Kiến trúc và thiết kế phần mềm,3,CNTT
+CNTT_QLDA_PM,Quản lý dự án phần mềm,3,CNTT
+CNTT_TH_LAP_TRINH_WEB,Thực hành lập trình web,3,CNTT
+CNTT_THIET_KE_GIAO_DIEN,Thiết kế giao diện người dùng,3,CNTT
+CNTT_PTUD_DI_DONG,Phát triển ứng dụng cho các thiết bị di động,3,CNTT
+CNTT_PTUD_DI_DONG_DA_NEN_TANG,Phát triển ứng dụng di động đa nền tảng,3,CNTT
+CNTT_KY_THUAT_MANG_VA_TRUYEN_THONG,Kỹ thuật mạng và truyền thông,3,CNTT
+CNTT_NM_TTNT,Nhập môn trí tuệ nhân tạo,3,CNTT
+CNTT_NM_HOC_MAY,Nhập môn học máy,3,CNTT
+CNTT_NM_HOC_SAU,Nhập môn học sâu,3,CNTT
+CNTT_TTNT_CO_BAN,Trí tuệ nhân tạo cơ bản,3,CNTT
+CNTT_KH_DL_CO_BAN,Khoa học dữ liệu cơ bản,3,CNTT
+CNTT_XU_LY_ANH,Xử lý ảnh,3,CNTT
+CNTT_XLNN_TN,Xử lý ngôn ngữ tự nhiên,3,CNTT
+CNTT_MO_HINH_NNL,Mô hình ngôn ngữ lớn,3,CNTT
+CNTT_NM_KHOA_HOC_DL,Nhập môn khoa học dữ liệu,3,CNTT
+CNTT_HOC_MAY,Học máy,3,CNTT
+CNTT_HOC_SAU,Học sâu,3,CNTT
+CNTT_KHAI_PHA_DL,Khai phá dữ liệu,3,CNTT
+CNTT_KHAI_PHA_DL_LON,Khai phá dữ liệu lớn,3,CNTT
+CNTT_KHO_DU_LIEU,Kho dữ liệu,3,CNTT
+CNTT_DU_LIEU_LON,Dữ liệu lớn,3,CNTT
+CNTT_TRUC_QUAN_DL,Trực quan hoá dữ liệu,3,CNTT
+CNTT_PHAN_TICH_DL_LON,Phân tích dữ liệu lớn,3,CNTT
+CNTT_TINH_TOAN_SONG_SONG,Tính toán song song và hệ thống phân tán,3,CNTT
+CNTT_HE_THONG_DU_LIEU,Hệ thống dữ liệu,2,CNTT
+CNTT_IOT_UNG_DUNG,IoT và ứng dụng,3,CNTT
+CNTT_LAP_TRINH_PY_ATTT,Lập trình Python cho An toàn thông tin,3,CNTT
+CNTT_LAP_TRINH_WEB_ATTT,Lập trình Web cho An toàn thông tin,3,CNTT
+CNTT_AT_BM_HTTT,An toàn và bảo mật hệ thống thông tin,3,CNTT
+DTVT_TIN_HIEU_HE_THONG,Tín hiệu và hệ thống,3,DTVT
+DTVT_XL_TIN_HIEU_SO,Xử lý tín hiệu số,3,DTVT
+DTVT_LINH_KIEN_MACH_DT,Linh kiện và mạch điện tử,3,DTVT
+DTVT_CAU_KIEN_CAM_BIEN,Cấu kiện điện tử và cảm biến,3,DTVT
+DTVT_MACH_DT_CO_BAN,Mạch điện tử cơ bản,3,DTVT
+DTVT_MACH_DT_NANG_CAO,Mạch điện tử nâng cao,3,DTVT
+DTVT_CO_SO_DO_LUONG_DT,Cơ sở đo lường điện tử,2,DTVT
+DTVT_DIEN_TU_SO,Điện tử số,3,DTVT
+DTVT_MANG_CAM_BIEN,Mạng cảm biến,3,DTVT
+DTVT_MANG_CAM_BIEN_TT,Mạng cảm biến thông minh,3,DTVT
+DTVT_TONG_QUAN_IOT,Tổng quan về IoT,2,DTVT
+DTVT_VI_DIEU_KHIEN_IOT,Vi điều khiển trong IoT,3,DTVT
+DTVT_KY_THUAT_LAP_TRINH,Kỹ thuật lập trình,3,DTVT
+DTVT_LY_THUYET_TT_MA_HOA,Lý thuyết thông tin và mã hóa,3,DTVT
+DTVT_CO_SO_VIEN_THONG,Cơ sở kỹ thuật các hệ thống viễn thông,3,DTVT
+DTVT_TRUYEN_SONG_ANTEN,Truyền sóng và anten,3,DTVT
+DTVT_KY_THUAT_TT_QUANG,Kỹ thuật thông tin quang,3,DTVT
+DTVT_KY_THUAT_TT_VO_TUYEN,Kỹ thuật thông tin vô tuyến,3,DTVT
+DTVT_MANG_TRUYEN_THONG,Mạng truyền thông,3,DTVT
+DTVT_MANG_TRUYEN_THONG_QUANG,Mạng truyền thông và quang,3,DTVT
+DTVT_MO_PHONG_HE_THONG_TT,Mô phỏng hệ thống truyền thông,2,DTVT
+DTVT_INTERNET_GIAO_THUC,Internet và các giao thức,3,DTVT
+KTĐT_MACH_DIEN,Mạch điện,3,KTĐT
+KTĐT_KY_THUAT_DIEN_TU,Kỹ thuật điện tử,3,KTĐT
+KTĐT_THIET_BI_HT_TU_DONG,Thiết bị và hệ thống tự động,2,KTĐT
+KTĐT_KY_THUAT_DO_DIEN,Kỹ thuật đo điện,2,KTĐT
+KTĐT_CO_SO_DIEU_KHIEN_TUDONG,Cơ sở điều khiển tự động,3,KTĐT
+KTĐT_XL_TIN_HIEU_SO,Xử lý tín hiệu số,2,KTĐT
+KTĐT_DIEN_TU_CONG_SUAT,Điện tử công suất,3,KTĐT
+KTĐT_VI_DIEU_KHIEN,Vi điều khiển,3,KTĐT
+KTĐT_HE_THONG_THUY_LUC_KHI_NEN,Hệ thống thủy lực - khí nén,2,KTĐT
+KTĐT_TRUYEN_DONG_DIEN,Truyền động điện,3,KTĐT
+KTĐT_ROBOT_CONG_NGHIEP,Rô bốt công nghiệp,2,KTĐT
+KTĐT_MANG_TRUYEN_THONG_CN,Mạng truyền thông công nghiệp,2,KTĐT
+KTĐT_HT_DK_PHI_TUYEN,Hệ thống điều khiển phi tuyến,2,KTĐT
+KTĐT_HT_DK_QUA_TRINH,Hệ thống điều khiển quá trình,3,KTĐT
+KTĐT_AN_TOAN_DIEN,An toàn điện,2,KTĐT
+KTĐT_THIET_KE_CO_DIEN,Thiết kế cơ điện,3,KTĐT
+KTĐT_DIEU_KHIEN_MO_MANG_NO_RON,Điều khiển mờ và mạng nơ ron,3,KTĐT
+KTĐT_QUAN_LY_BAO_TRI_CN,Quản lý bảo trì công nghiệp,2,KTĐT
+KTĐT_MO_HINH_HOA_MO_PHONG,Mô hình hóa và mô phỏng,2,KTĐT
+KTĐT_KY_THUAT_PLC,Kỹ thuật logic khả trình PLC,3,KTĐT
+KTĐT_HT_GIAM_SAT_DK_TT_DL,Hệ thống giám sát điều khiển và thu thập dữ liệu,3,KTĐT
+KTĐT_HT_DK_PHAN_TAN,Hệ thống điều khiển phân tán,3,KTĐT
+ATTT_CO_SO_ATTT,Cơ sở an toàn thông tin,3,ATTT
+ATTT_MAT_MA_CO_SO,Mật mã học cơ sở,3,ATTT
+ATTT_MAT_MA_NANG_CAO,Mật mã học nâng cao,3,ATTT
+ATTT_AT_UNG_DUNG_WEB_CSDL,An toàn ứng dụng web và cơ sở dữ liệu,3,ATTT
+ATTT_AT_MANG,An toàn mạng,3,ATTT
+ATTT_AT_MANG_NANG_CAO,An toàn mạng nâng cao,3,ATTT
+ATTT_AT_HE_DIEU_HANH,An toàn hệ điều hành,2,ATTT
+ATTT_GIAM_SAT_AT_MANG,Giám sát an toàn mạng,3,ATTT
+ATTT_KIEM_THU_XAM_NHAP,Kiểm thử xâm nhập,3,ATTT
+ATTT_PHAN_TICH_MA_DOC,Phân tích mã độc,3,ATTT
+ATTT_QUAN_LY_ATTT,Quản lý an toàn thông tin,3,ATTT
+ATTT_KT_THEO_DOI_GIAM_SAT,Kỹ thuật theo dõi và giám sát an toàn mạng,2,ATTT
+ATTT_AT_IOT,An toàn Internet of Things,3,ATTT
+ATTT_TTNT_CHO_ATTT,Trí tuệ nhân tạo cho an toàn bảo mật thông tin,3,ATTT
+QTKD_KT_VI_MO1,Kinh tế vi mô 1,3,QTKD
+QTKD_KT_VI_MO,Kinh tế vi mô,3,QTKD
+QTKD_KT_VI_MO1_MACRO,Kinh tế vĩ mô 1,3,QTKD
+QTKD_MARKETING_CAN_BAN,Marketing căn bản,3,QTKD
+QTKD_QUAN_TRI_HOC,Quản trị học,3,QTKD
+QTKD_THUONG_MAI_DT_CAN_BAN,Thương mại điện tử căn bản,3,QTKD
+QTKD_KINH_TE_LUONG,Kinh tế lượng,3,QTKD
+QTKD_QUAN_TRI_CHIEN_LUOC,Quản trị chiến lược,3,QTKD
+QTKD_QUAN_TRI_BAN_HANG,Quản trị bán hàng,2,QTKD
+QTKD_QUAN_TRI_TAI_CHINH_DN,Quản trị tài chính doanh nghiệp,3,QTKD
+QTKD_HE_THONG_TT_QL,Hệ thống thông tin quản lý,2,QTKD
+QTKD_MARKETING_SO,Marketing số,3,QTKD
+QTKD_TRUYEN_THONG_MARKETING_TICH_HOP,Truyền thông Marketing tích hợp,3,QTKD
+QTKD_E_MARKETING,E-Marketing,2,QTKD
+QTKD_HANH_VI_KHACH_HANG,Hành vi người tiêu dùng,3,QTKD
+QTKD_LOGISTICS_CAN_BAN,Logistics căn bản,2,QTKD
+QTKD_QUAN_TRI_MARKETING,Quản trị marketing,2,QTKD
+QTKD_MARKETING_DICH_VU,Marketing dịch vụ,2,QTKD
+QTKD_MARKETING_CONG_NGHIEP,Marketing công nghiệp,2,QTKD
+QTKD_NGHIEN_CUU_MARKETING,Phương pháp nghiên cứu marketing,3,QTKD
+QTKD_QUAN_TRI_THUONG_HIEU,Quản trị thương hiệu,2,QTKD
+QTKD_DE_AN_INTERNET_MARKETING,Đề án Kế hoạch Internet marketing,2,QTKD
+QTKD_NGUYEN_LY_LOGISTICS,Nguyên lý cơ bản về logistics và quản lý chuỗi cung ứng,3,QTKD
+QTKD_QUAN_TRI_CHUOI_CUNG_UNG,Quản trị chuỗi cung ứng,3,QTKD
+QTKD_HE_THONG_TT_LOGISTICS,Hệ thống thông tin logistics,2,QTKD
+QTKD_LOGISTICS_TM_DT,Logistics trong thương mại điện tử,2,QTKD
+QTKD_QUAN_LY_KHO_TTPP,Quản lý kho và trung tâm phân phối,2,QTKD
+QTKD_NGHIEP_VU_HAI_QUAN,Nghiệp vụ hải quan,2,QTKD
+QTKD_GIAO_NHAN_VAN_TAI,"Giao nhận, vận tải và bảo hiểm hàng hóa",3,QTKD
+QTKD_KINH_DOANH_XNK,Nghiệp vụ kinh doanh xuất nhập khẩu,3,QTKD
+KT_NGUYEN_LY_KE_TOAN,Nguyên lý kế toán,3,TC
+KT_KE_TOAN_QUAN_TRI1,Kế toán quản trị 1,3,TC
+KT_KE_TOAN_QUAN_TRI2,Kế toán quản trị 2,3,TC
+KT_KE_TOAN_TAI_CHINH1,Kế toán tài chính 1,4,TC
+KT_KE_TOAN_TAI_CHINH2,Kế toán tài chính 2,4,TC
+KT_KE_TOAN_TAI_CHINH3,Kế toán tài chính 3,3,TC
+KT_TAI_CHINH_TIEN_TE,Tài chính tiền tệ,3,TC
+KT_PHAN_TICH_TAI_CHINH_DN,Phân tích tài chính doanh nghiệp,3,TC
+KT_KIEM_TOAN_CAN_BAN,Kiểm toán căn bản,3,TC
+KT_KIEM_TOAN_TAI_CHINH,Kiểm toán tài chính,3,TC
+KT_THUE_KE_TOAN_THUE,Thuế và kế toán thuế,4,TC
+KT_KE_TOAN_MAY,Kế toán máy,2,TC
+KT_KE_TOAN_HCSN,Kế toán hành chính sự nghiệp,2,TC
+KT_CFA,CFA,3,TC
+KT_ACCA,ACCA,3,TC
+KT_THANH_TOAN_QUOC_TE,Thanh toán quốc tế,2,TC
+KT_KE_TOAN_DOANH_NGHIEP_VN,Kế toán doanh nghiệp Việt Nam,3,TC
+KT_CN_TAI_CHINH_CAN_BAN,Công nghệ tài chính căn bản,3,TC
+KT_PHAN_TICH_NGHIEP_VU_KD,Phân tích nghiệp vụ kinh doanh,3,TC
+KT_PHAN_TICH_THIET_KE_HTTT_TC,Phân tích và thiết kế HTTT quản lý (Fintech),3,TC
+KT_ATTT_FINTECH,An toàn bảo mật thông tin (Fintech),3,TC
+KT_KINH_TE_LUONG_TAI_CHINH,Kinh tế lượng tài chính,3,TC
+KT_CONG_NGHE_BLOCKCHAIN,CN Blockchain và ứng dụng trong tài chính,3,TC
+KT_TAI_CHINH_HANH_VI,Tài chính hành vi,3,TC
+KT_TTNT_TRONG_TC,Trí tuệ nhân tạo trong tài chính,3,TC
+KT_QUAN_TRI_RUI_RO_TC,Quản trị rủi ro tài chính,3,TC
+KT_PHAN_TICH_DL_TC_QUY_MO_LON,Phân tích dữ liệu tài chính quy mô lớn,3,TC
+KT_QL_UD_DL_TRONG_TC,Quản lý và ứng dụng dữ liệu trong tài chính,2,TC
+DPTT_NM_CONG_NGHE_GAME,Nhập môn Công nghệ Game,2,DPTT
+DPTT_THIET_KE_DO_HOA,Thiết kế đồ họa,3,DPTT
+DPTT_THIET_KE_GIAO_DIEN_GAME,Thiết kế giao diện người chơi game,3,DPTT
+DPTT_THIET_KE_CO_CHE_MAN_CHOI,Thiết kế cơ chế và màn chơi game,3,DPTT
+DPTT_LAP_TRINH_GAME_CO_BAN,Lập trình game cơ bản,3,DPTT
+DPTT_LAP_TRINH_GAME_NANG_CAO,Lập trình game nâng cao,3,DPTT
+DPTT_LAP_TRINH_DO_HOA_GAME,Lập trình đồ họa game,3,DPTT
+DPTT_LAP_TRINH_AM_THANH,Lập trình âm thanh,2,DPTT
+DPTT_DU_AN_GAME1,Dự án game 1,3,DPTT
+DPTT_DU_AN_GAME2,Dự án game 2,3,DPTT
+DPTT_AN_TOAN_GAME,An toàn game,3,DPTT
+DPTT_TTNT_TRONG_GAME,Trí tuệ nhân tạo trong Game,3,DPTT
+DPTT_KY_THUAT_NHIEP_ANH,Kỹ thuật nhiếp ảnh,3,DPTT
+DPTT_QUAY_PHIM,Quay phim,3,DPTT
+DPTT_VIET_DA_PHUONG_TIEN,Viết đa phương tiện,3,DPTT
+DPTT_BIEN_TAP_DA_PHUONG_TIEN,Biên tập đa phương tiện,3,DPTT
+DPTT_QUANG_CAO_DA_PHUONG_TIEN,Quảng cáo đa phương tiện,2,DPTT
+DPTT_TO_CHUC_SAN_XUAT_PODCAST,Tổ chức sản xuất podcast,3,DPTT
+DPTT_TO_CHUC_SAN_XUAT_VIDEO,Tổ chức sản xuất video,3,DPTT
+TTN_TTNT_CO_BAN,Trí tuệ nhân tạo cơ bản,3,TTN
+TTN_NM_TTNT_VAN_VAT,Nhập môn trí tuệ nhân tạo vạn vật,2,TTN
+TTN_NEN_TANG_PTTTNT,Nền tảng phát triển trí tuệ nhân tạo,3,TTN
+TTN_HOC_SAU_IOT,Học sâu và ứng dụng trong IoT,3,TTN
+TTN_MO_HINH_NGUON_NGON_LON,Mô hình ngôn ngữ lớn,3,TTN
+TTN_TTNT_CHO_ATTT,Trí tuệ nhân tạo cho an toàn bảo mật thông tin,3,TTN
+TTN_CONG_CU_TRIEN_KHAI_TTNT,Công cụ triển khai và vận hành ứng dụng TTNT,3,TTN
+TTN_PHAT_TRIEN_UNG_DUNG_TTNT,Phát triển ứng dụng TTNT,3,TTN
+TTN_THI_GIAC_MAY_TINH,Thị giác máy tính,3,TTN
+TTN_HOC_TANG_CUONG,Học tăng cường và ứng dụng,3,TTN
+TTN_TRUY_XUAT_THONG_TIN,Truy xuất thông tin,3,TTN

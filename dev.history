@@ -1,0 +1,53 @@
+initial entities logic
+agreement: Controller → Service → Repository → Database → Repository → Service → DTO → Controller
+dao and dto logic
+switch to jdbc
+add various manual sql queries
+basic controller
+done factoring using intellij
+fix various import logic bug
+add dependencies
+add a test mysql docker
+add numerous throw exceptions
+fix recreate data spring.jpa.hibernate.ddl-auto=update
+doesnt work
+turn to insert ignore
+
+git init successful
+add various dependencies: Spring Boot Starter Validation, jjwt-api, jjwt-impl
+configure application.properties for jwt
+add a new table users
+add new controller and dto for registration
+add /security with jwt logic
+add new reg and repo service
+reconfigure .sql files
+fix bug import security
+fix jwt dependencies bug
+fix jwt bug where i used map while teacherId could be null, rebuilt the code by using
+
+git push successful
+add admin seed logic
+add python script calling admin seed api
+configure several routes
+
+add a test gui using html
+
+big update on all logic via new requirements
+start reconfigure all logic
+refactor schema.sql: add several tables
+alter relationships between tables
+fix too long index length
+fix bug mysql not support current_date
+remove the registration routes
+add all seed data in admin route instead of registration
+rewrite python script for seeding
+
+start remaking on the gui
+i forget to change the entity and dto to the updated database, start remaking all entities
+reconfigure repos with the new db
+start making the gui with thymeleaf
+start making the pdf exporter
+using com.github.librepdf
+configuring pdf exporter: service /export
+bug where i can't use Unicode to render Vietnamese, hotfix: use builtin font
+TODO: fix the Unicode issues

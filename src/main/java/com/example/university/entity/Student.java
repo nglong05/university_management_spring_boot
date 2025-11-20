@@ -10,7 +10,6 @@ import lombok.*;
 @EqualsAndHashCode(of = "id")
 public class Student {
     private String id;
-
     private String fullName;
     private LocalDate dateOfBirth;
     private String gender;
@@ -18,17 +17,18 @@ public class Student {
     private String phone;
     private String email;
     private String departmentID;
+    private String majorID;
 }
 
-//CREATE TABLE IF NOT EXISTS sinh_vien (
-//        ma_sv         VARCHAR(15)  PRIMARY KEY,
-//ho_ten        VARCHAR(120) NOT NULL,
-//ngay_sinh     DATE         NOT NULL,
-//gioi_tinh     ENUM('M','F','O') NOT NULL,
-//dia_chi       VARCHAR(255),
-//so_dien_thoai VARCHAR(20),
-//email         VARCHAR(120) UNIQUE,
-//ma_khoa       VARCHAR(10)  NOT NULL,
-//CONSTRAINT fk_sv_khoa FOREIGN KEY (ma_khoa)
-//REFERENCES khoa(ma_khoa) ON UPDATE CASCADE
-//);
+//+---------------+-------------------+------+-----+---------+-------+
+//| Field         | Type              | Null | Key | Default | Extra |
+//+---------------+-------------------+------+-----+---------+-------+
+//| ma_sv         | varchar(50)       | NO   | PRI | NULL    |       |
+//| ho_ten        | varchar(100)      | NO   |     | NULL    |       |
+//| ngay_sinh     | date              | NO   |     | NULL    |       |
+//| gioi_tinh     | enum('M','F','O') | NO   |     | NULL    |       |
+//| dia_chi       | varchar(500)      | YES  |     | NULL    |       |
+//| so_dien_thoai | varchar(100)      | YES  |     | NULL    |       |
+//| email         | varchar(100)      | YES  | UNI | NULL    |       |
+//| ma_nganh_hoc  | varchar(50)       | NO   | MUL | NULL    |       |
+//+---------------+-------------------+------+-----+---------+-------+

@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   mysql:
     image: mysql:8.0
@@ -6,7 +5,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: v2_8ddf5gd!jt5ty843!(Q@HQ!@MXQ83794t8Q@&4t87Q
       MYSQL_DATABASE: universitydb
+      TZ: Asia/Ho_Chi_Minh
+    command: >
+      mysqld
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --init-connect='SET NAMES utf8mb4;'
+      --skip-character-set-client-handshake
     ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql
+        - "3306:3306"

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student - University UI</title>
+    <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Student Portal</div>
+    <nav class="nav">
+        <span th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+        <a th:href="@{/ui/logout}">
+            <button class="danger">Đăng xuất</button>
+        </a>
+    </nav>
+</header>
+
+<main>
+    <section class="grid-2">
+        <!-- Hồ sơ -->
+        <div class="card">
+            <h3>Hồ sơ sinh viên</h3>
+            <table class="table" th:if="${profile != null}">
+                <tbody>
+                <tr><th>Mã SV</th><td th:text="${profile.id}"></td></tr>
+                <tr><th>Họ tên</th><td th:text="${profile.fullName}"></td></tr>
+                <tr><th>Ngày sinh</th><td th:text="${profile.dateOfBirth}"></td></tr>
+                <tr><th>Giới tính</th><td th:text="${profile.gender}"></td></tr>
+                <tr><th>Email</th><td th:text="${profile.email}"></td></tr>
+                <tr><th>Khoa</th><td th:text="${profile.departmentID}"></td></tr>
+                <tr><th>Chuyen nganh</th><td th:text="${profile.majorID}"></td></tr>
+                </tbody>
+            </table>
+            <p th:if="${profile == null}">Không có dữ liệu hồ sơ.</p>
+        </div>
+
+        <!-- GPA -->
+        <div class="card">
+            <h3>GPA</h3>
+
+            <form th:action="@{/ui/student/home}" method="get" class="form">
+                <label>
+                    Kỳ học (vd: 2025-1, để trống = tích lũy)
+                    <input type="text" name="semester" th:value="${semesterFilter}">
+                </label>
+
+                <div class="row" style="margin-top: 8px;">
+                    <button type="submit">Lọc</button>
+
+                    <a th:href="@{'/ui/student/export-pdf'(semester=${semesterFilter})}"
+                       class="btn-link">
+                        Xuất PDF
+                    </a>
+                </div>
+            </form>
+
+            <div style="margin-top: 12px;" th:if="${gpa != null}">
+                <div>GPA hệ 10: <b th:text="${gpa.gpa10}">0</b></div>
+                <div>GPA hệ 4: <b th:text="${gpa.gpa4}">0</b></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bảng điểm -->
+    <section class="card">
+        <h3>Bảng điểm</h3>
+        <p th:if="${error != null}" th:text="${error}" style="color:#f87171;"></p>
+        <div class="table-wrap" th:if="${transcript != null and #lists.size(transcript) > 0}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Mã môn</th><th>Tên môn</th><th>TC</th>
+                    <th>QT</th><th>GK</th><th>CK</th><th>Tổng kết</th><th>Kỳ</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${transcript}">
+                    <td th:text="${row.courseId}">CT101</td>
+                    <td th:text="${row.courseName}">Nhập môn</td>
+                    <td th:text="${row.credits}">3</td>
+                    <td th:text="${row.processScore}">7</td>
+                    <td th:text="${row.midtermScore}">7.5</td>
+                    <td th:text="${row.finalExamScore}">8.0</td>
+                    <td th:text="${row.finalScore}">7.8</td>
+                    <td th:text="${row.semesterId}">2025-1</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p th:if="${transcript == null or #lists.size(transcript) == 0}">Chưa có dữ liệu điểm.</p>
+    </section>
+</main>
+</body>
+</html>

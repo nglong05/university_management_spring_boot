@@ -32,6 +32,7 @@ public class StudentJdbcRepository {
         s.setPhone(rs.getString("so_dien_thoai"));
         s.setEmail(rs.getString("email"));
         s.setDepartmentID(rs.getString("ma_khoa"));
+        s.setMajorID(rs.getString("ma_nganh_hoc"));
         return s;
     }
 
@@ -148,4 +149,24 @@ public class StudentJdbcRepository {
         }
         return list;
     }
+
+    public int insertStudent(Connection con, com.example.university.entity.Student s) throws SQLException {
+        String sql = """
+    INSERT INTO sinh_vien(ma_sv, ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, email, ma_khoa)
+    VALUES (?,?,?,?,?,?,?,?)
+  """;
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, s.getId());
+            ps.setString(2, s.getFullName());
+            ps.setDate(3, java.sql.Date.valueOf(s.getDateOfBirth()));
+            ps.setString(4, s.getGender());
+            ps.setString(5, s.getAddress());
+            ps.setString(6, s.getPhone());
+            ps.setString(7, s.getEmail());
+            ps.setString(8, s.getDepartmentID());
+            ps.setString(9, s.getMajorID());
+            return ps.executeUpdate();
+        }
+    }
+
 }

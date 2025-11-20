@@ -14,23 +14,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
+
+import com.example.university.security.AuthUser;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 @RestController
 @RequestMapping("/api/lecturers")
 @RequiredArgsConstructor
-@Validated
-@Tag(name = "Lecturer APIs", description = "Chức năng cho giảng viên")
 public class LecturerController {
 
-    private final LecturerService lecturerService;
+    private final LecturerService service;
 
-    @PutMapping("/{lecturerId}/grades")
-    @Operation(summary = "Nhập/cập nhật điểm cho SV (cần đúng phân công môn/kỳ)")
-    public ResponseEntity<Void> updateGrade(
-            @PathVariable("lecturerId") String lecturerId,
-            @Valid @RequestBody UpdateGradeRequest request) throws SQLException {
-
-        lecturerService.updateGrade(lecturerId, request);
-        // Không trả body để đơn giản; 204 No Content là chuẩn cho cập nhật thành công không có nội dung trả về.
-        return ResponseEntity.noContent().build();
+    @PutMapping("/me/grades")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<?> updateMyGrade(
+            @AuthenticationPrincipal AuthUser me,
+            @Valid @RequestBody UpdateGradeRequest req) throws SQLException {
+        service.updateGrade(me.getLecturerId(), req);
+        return ResponseEntity.ok().build();
     }
 }

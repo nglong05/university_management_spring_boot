@@ -95,4 +95,24 @@ public class LecturerJdbcRepository {
             }
             return list;
     }
+
+    // ...
+    public int insertLecturer(Connection con, com.example.university.entity.Lecturer g) throws SQLException {
+        String sql = """
+    INSERT INTO giang_vien(ma_gv, ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, email, ma_khoa)
+    VALUES (?,?,?,?,?,?,?,?)
+  """;
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, g.getId());
+            ps.setString(2, g.getFullName());
+            if (g.getDateOfBirth() != null) ps.setDate(3, java.sql.Date.valueOf(g.getDateOfBirth())); else ps.setNull(3, Types.DATE);
+            if (g.getGender() != null) ps.setString(4, g.getGender().name()); else ps.setNull(4, Types.VARCHAR);
+            ps.setString(5, g.getAddress());
+            ps.setString(6, g.getPhone());
+            ps.setString(7, g.getEmail());
+            ps.setString(8, g.getDepartmentId());
+            return ps.executeUpdate();
+        }
+    }
+
 }

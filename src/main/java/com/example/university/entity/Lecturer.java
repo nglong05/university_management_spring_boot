@@ -15,7 +15,7 @@ public class Lecturer {
     private String fullName;
     private LocalDate dateOfBirth;
     private Gender gender;
-    private String addess;
+    private String address;
     private String phone;
     private String email;
     private String departmentId;
