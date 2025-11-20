@@ -51,3 +51,7 @@ using com.github.librepdf
 configuring pdf exporter: service /export
 bug where i can't use Unicode to render Vietnamese, hotfix: use builtin font
 TODO: fix the Unicode issues
+adding the research feature
+doing complex query for listing the researches in the repo
+doing the gui for the researches
+

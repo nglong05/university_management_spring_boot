@@ -3,6 +3,8 @@ package com.example.university.ui;
 import com.example.university.dto.GpaDTO;
 import com.example.university.dto.TranscriptItemDTO;
 import com.example.university.entity.Student;
+import com.example.university.dto.ResearchProjectDTO;
+import com.example.university.dto.ResearchRegistrationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -68,4 +70,37 @@ public class UiStudentService {
         );
         return resp.getBody();
     }
+
+    public void registerResearch(UiSession s, ResearchRegistrationRequest req) {
+        HttpHeaders headers = authHeaders(s);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ResearchRegistrationRequest> entity = new HttpEntity<>(req, headers);
+        ResponseEntity<Void> resp = restTemplate.exchange(
+                "/api/students/me/research-projects",
+                HttpMethod.POST,
+                entity,
+                Void.class
+        );
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không đăng ký được đề tài");
+        }
+    }
+
+    public List<ResearchProjectDTO> getMyResearch(UiSession s, String semester) {
+        HttpEntity<Void> entity = new HttpEntity<>(authHeaders(s));
+        String url = "/api/students/me/research-projects";
+        if (semester != null && !semester.isBlank()) {
+            url += "?semester=" + semester;
+        }
+
+        ResponseEntity<List<ResearchProjectDTO>> resp = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<List<ResearchProjectDTO>>() {}
+        );
+        return resp.getBody();
+    }
+
 }

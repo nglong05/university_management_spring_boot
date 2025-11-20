@@ -4,6 +4,9 @@ import com.example.university.dto.GpaDTO;
 import com.example.university.dto.TranscriptItemDTO;
 import com.example.university.dto.UpdateGradeRequest;
 import com.example.university.entity.Student;
+import com.example.university.dto.ResearchProjectDTO;
+import com.example.university.dto.ResearchRegistrationRequest;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -85,18 +88,73 @@ public class UiController {
             Student profile = studentService.getMyProfile(ui);
             List<TranscriptItemDTO> transcript = studentService.getMyTranscript(ui, semester);
             GpaDTO gpa = studentService.getMyGpa(ui, semester);
+            List<ResearchProjectDTO> researchList = studentService.getMyResearch(ui, null);
 
             model.addAttribute("session", ui);
             model.addAttribute("profile", profile);
             model.addAttribute("transcript", transcript);
             model.addAttribute("gpa", gpa);
             model.addAttribute("semesterFilter", semester == null ? "" : semester);
+            model.addAttribute("researchList", researchList);
+            model.addAttribute("researchOk", null);
+            model.addAttribute("researchError", null);
 
             return "ui/student-home";
         } catch (Exception e) {
             model.addAttribute("error", "Không tải được dữ liệu sinh viên: " + e.getMessage());
             return "ui/student-home";
         }
+    }
+
+    @PostMapping("/student/research/register")
+    public String registerResearch(
+            @RequestParam String maGv,
+            @RequestParam String maKy,
+            @RequestParam String tenDeTai,
+            @RequestParam String moTa,
+            @RequestParam(required = false) String fileDinhKem,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isStudent()) {
+            return "redirect:/ui/login";
+        }
+
+        ResearchRegistrationRequest req = new ResearchRegistrationRequest();
+        req.setMaGv(maGv);
+        req.setMaKy(maKy);
+        req.setTenDeTai(tenDeTai);
+        req.setMoTa(moTa);
+        req.setFileDinhKem(fileDinhKem);
+
+        try {
+            studentService.registerResearch(ui, req);
+            model.addAttribute("researchOk", "Đã gửi đăng ký đề tài thành công.");
+            model.addAttribute("researchError", null);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không thể đăng ký đề tài: " + e.getMessage());
+            model.addAttribute("researchOk", null);
+        }
+
+        // Reload lại dữ liệu giống GET /student/home
+        try {
+            Student profile = studentService.getMyProfile(ui);
+            List<TranscriptItemDTO> transcript = studentService.getMyTranscript(ui, null);
+            GpaDTO gpa = studentService.getMyGpa(ui, null);
+            List<ResearchProjectDTO> researchList = studentService.getMyResearch(ui, null);
+
+            model.addAttribute("session", ui);
+            model.addAttribute("profile", profile);
+            model.addAttribute("transcript", transcript);
+            model.addAttribute("gpa", gpa);
+            model.addAttribute("semesterFilter", "");
+            model.addAttribute("researchList", researchList);
+        } catch (Exception ex) {
+            model.addAttribute("error", "Không tải được dữ liệu sinh viên: " + ex.getMessage());
+        }
+
+        return "ui/student-home";
     }
 
     // ================== LECTURER UI ==================

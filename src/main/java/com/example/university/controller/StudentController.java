@@ -2,11 +2,15 @@ package com.example.university.controller;
 
 import com.example.university.dto.GpaDTO;
 import com.example.university.dto.TranscriptItemDTO;
+import com.example.university.dto.ResearchProjectDTO;
+import com.example.university.dto.ResearchRegistrationRequest;
 import com.example.university.entity.Student;
 import com.example.university.service.StudentService;
 import com.example.university.service.export.PdfExportService;
+import com.example.university.service.StudentResearchService;
 
 import com.example.university.security.AuthUser;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -30,6 +34,7 @@ public class StudentController {
 
     private final StudentService studentService;
     private final PdfExportService pdfExportService;
+    private final StudentResearchService studentResearchService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy hồ sơ sinh viên theo mã")
@@ -112,6 +117,47 @@ public class StudentController {
                 .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .body(pdf);
+    }
+
+    // ================== NGHIÊN CỨU KHOA HỌC  ==================
+
+    @GetMapping("/me/research-projects")
+    @PreAuthorize("hasRole('STUDENT')")
+    public List<ResearchProjectDTO> myResearchProjects(
+            @AuthenticationPrincipal AuthUser me,
+            @RequestParam(value = "semester", required = false) String semesterId
+    ) throws SQLException {
+        if (me.getStudentId() == null) {
+            throw new IllegalStateException("Tài khoản không gắn với sinh viên.");
+        }
+        return studentResearchService.listMyProjects(me.getStudentId(), semesterId);
+    }
+
+    @PostMapping("/me/research-projects")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> registerResearchProject(
+            @AuthenticationPrincipal AuthUser me,
+            @Valid @RequestBody ResearchRegistrationRequest req
+    ) throws SQLException {
+        if (me.getStudentId() == null) {
+            return ResponseEntity.status(403).build();
+        }
+        studentResearchService.register(me.getStudentId(), req);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/me/research-projects/{lecturerId}/{semesterId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> cancelResearchProject(
+            @AuthenticationPrincipal AuthUser me,
+            @PathVariable String lecturerId,
+            @PathVariable String semesterId
+    ) throws SQLException {
+        if (me.getStudentId() == null) {
+            return ResponseEntity.status(403).build();
+        }
+        studentResearchService.cancel(me.getStudentId(), lecturerId, semesterId);
+        return ResponseEntity.noContent().build();
     }
 
 }
