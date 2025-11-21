@@ -158,16 +158,43 @@ public class UiController {
     }
 
     // ================== LECTURER UI ==================
-
     @GetMapping("/lecturer/home")
-    public String lecturerHome(HttpSession session, Model model) {
+    public String lecturerHome(
+            @RequestParam(value = "courseId", required = false) String courseId,
+            @RequestParam(value = "semesterId", required = false) String semesterId,
+            HttpSession session,
+            Model model
+    ) {
         UiSession ui = requireLogin(session);
         if (!ui.isLecturer()) {
             return "redirect:/ui/login";
         }
+
         model.addAttribute("session", ui);
         model.addAttribute("gradeError", null);
         model.addAttribute("gradeOk", null);
+
+        // Danh sách môn được phân công
+        try {
+            var courses = lecturerService.myCourses(ui);
+            model.addAttribute("courses", courses);
+        } catch (Exception e) {
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+        }
+
+        // Nếu có chọn môn + kỳ => load danh sách sinh viên
+        if (courseId != null && !courseId.isBlank()
+            && semesterId != null && !semesterId.isBlank()) {
+            try {
+                var classTranscript = lecturerService.classTranscript(ui, courseId, semesterId);
+                model.addAttribute("classTranscript", classTranscript);
+                model.addAttribute("selectedCourseId", courseId);
+                model.addAttribute("selectedSemesterId", semesterId);
+            } catch (Exception e) {
+                model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+            }
+        }
+
         return "ui/lecturer-home";
     }
 
@@ -203,7 +230,26 @@ public class UiController {
             model.addAttribute("gradeError", "Không thể lưu điểm: " + e.getMessage());
             model.addAttribute("gradeOk", null);
         }
+
         model.addAttribute("session", ui);
+
+        // Sau khi chấm xong: load lại danh sách môn + lớp tương ứng
+        try {
+            var courses = lecturerService.myCourses(ui);
+            model.addAttribute("courses", courses);
+        } catch (Exception e) {
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+        }
+
+        try {
+            var classTranscript = lecturerService.classTranscript(ui, maMon, maKy);
+            model.addAttribute("classTranscript", classTranscript);
+            model.addAttribute("selectedCourseId", maMon);
+            model.addAttribute("selectedSemesterId", maKy);
+        } catch (Exception e) {
+            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+        }
+
         return "ui/lecturer-home";
     }
 

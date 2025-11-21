@@ -17,6 +17,8 @@
 </header>
 
 <main>
+
+  <!-- CARD 1: Form nhập / sửa điểm -->
   <section class="card form">
     <h3>Nhập / sửa điểm sinh viên</h3>
     <form th:action="@{/ui/lecturer/grade}" method="post">
@@ -25,10 +27,12 @@
           <input name="maSv" placeholder="SV..." required>
         </label>
         <label>Mã môn
-          <input name="maMon" placeholder="CT101" required>
+          <input name="maMon" placeholder="CT101" required
+                 th:value="${selectedCourseId}">
         </label>
         <label>Mã kỳ
-          <input name="maKy" placeholder="2025-1" required>
+          <input name="maKy" placeholder="2025-1" required
+                 th:value="${selectedSemesterId}">
         </label>
       </div>
       <div class="row">
@@ -46,8 +50,87 @@
     </form>
     <p class="msg" style="color:#22c55e" th:text="${gradeOk}"></p>
     <p class="msg" style="color:#f97316" th:text="${gradeError}"></p>
-    <p class="hint">Lưu ý: chỉ ghi được điểm nếu bạn được phân công vào môn/kỳ đó (giangvien_monhockyhoc).</p>
+    <p class="hint">
+      Lưu ý: chỉ ghi được điểm nếu bạn được phân công vào môn/kỳ đó
+      (bảng <code>giangvien_monhoc</code>).
+    </p>
   </section>
+
+  <!-- CARD 2: Danh sách môn được phân công -->
+  <section class="card">
+    <h3>Môn học bạn được phân công</h3>
+    <p class="msg" style="color:#f97316" th:text="${coursesError}"></p>
+
+    <div class="table-wrap" th:if="${courses != null and #lists.size(courses) > 0}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Mã môn</th>
+          <th>Tên môn</th>
+          <th>TC</th>
+          <th>Kỳ</th>
+          <th>Xem lớp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${courses}">
+          <td th:text="${c.courseId}">CT101</td>
+          <td th:text="${c.courseName}">Nhập môn</td>
+          <td th:text="${c.credits}">3</td>
+          <td th:text="${c.semesterId}">2025-1</td>
+          <td>
+            <a th:href="@{|/ui/lecturer/home?courseId=${c.courseId}&semesterId=${c.semesterId}|}">
+              Xem lớp
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${courses == null or #lists.size(courses) == 0}">
+      Bạn chưa được phân công môn nào.
+    </p>
+  </section>
+
+  <!-- CARD 3: Danh sách sinh viên + bảng điểm lớp -->
+  <section class="card" th:if="${classTranscript != null}">
+    <h3>Bảng điểm lớp</h3>
+    <p class="msg" style="color:#f97316" th:text="${classTranscriptError}"></p>
+
+    <p th:if="${selectedCourseId != null}">
+      Môn: <b th:text="${selectedCourseId}">CT101</b> -
+      Kỳ: <b th:text="${selectedSemesterId}">2025-1</b>
+    </p>
+
+    <div class="table-wrap" th:if="${classTranscript != null and #lists.size(classTranscript) > 0}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Mã SV</th>
+          <th>Họ tên</th>
+          <th>QT</th>
+          <th>GK</th>
+          <th>CK</th>
+          <th>Tổng kết</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${classTranscript}">
+          <td th:text="${row.studentId}">SV001</td>
+          <td th:text="${row.studentName}">Nguyễn Văn A</td>
+          <td th:text="${row.processScore}">8.0</td>
+          <td th:text="${row.midtermScore}">7.5</td>
+          <td th:text="${row.finalExamScore}">8.0</td>
+          <td th:text="${row.finalScore}">7.9</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${classTranscript == null or #lists.size(classTranscript) == 0}">
+      Chưa có sinh viên / chưa có điểm cho lớp này.
+    </p>
+  </section>
+
 </main>
-</body>
-</html>

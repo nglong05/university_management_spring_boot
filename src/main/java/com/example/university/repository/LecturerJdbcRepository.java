@@ -2,6 +2,8 @@ package com.example.university.repository;
 
 import com.example.university.dto.UpdateGradeRequest;
 import com.example.university.dto.TranscriptItemDTO;
+import com.example.university.dto.ClassTranscriptItemDTO;
+import com.example.university.dto.LecturerCourseDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -10,17 +12,14 @@ import java.sql.*;
 
 @Repository
 public class LecturerJdbcRepository {
-    private DataSource dataSource;
+    private final DataSource dataSource;
     public LecturerJdbcRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     // validate if one can grade this student
     public boolean canGrade(String id, String courseId, String semesterId) {
-        String sql = """
-                SELECT 1 FROM giangvien_monhockyhoc
-                WHERE ma_gv = ? AND ma_mon = ? AND ma_ky = ?
-                """;
+        String sql = "SELECT 1 FROM giangvien_monhoc WHERE ma_gv = ? AND ma_mon = ? AND ma_ky = ?";
         try (
                 Connection con = dataSource.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)
@@ -49,7 +48,7 @@ public class LecturerJdbcRepository {
                 """;
         try (
                 Connection con = dataSource.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql);
+                PreparedStatement ps = con.prepareStatement(sql)
         ) {
             ps.setString(1, req.getMaSv());
             ps.setString(2, req.getMaMon());
@@ -62,57 +61,78 @@ public class LecturerJdbcRepository {
             throw new RuntimeException("upsertGrade(" + req + ")", e);
         }
     }
-
-        // xem bang diem
-        public List<TranscriptItemDTO> classTranscript(String courseId, String semesterId) {
-            String sql = """
-              SELECT ma_sv, ma_mon, ten_mon, so_tin_chi, ma_ky, diem_qt, diem_gk, diem_ck, diem_tong_ket
-              FROM v_bang_diem_sinh_vien
-              WHERE ma_mon = ? AND ma_ky = ?
-              ORDER BY ma_sv
-              """;
-            List<TranscriptItemDTO> list = new ArrayList<>();
-            try (Connection con = dataSource.getConnection();
-                 PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setString(1, courseId);
-                ps.setString(2, semesterId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        list.add(new TranscriptItemDTO(
-                                rs.getString("ma_mon"),
-                                rs.getString("ten_mon"),
-                                rs.getInt("so_tin_chi"),
-                                rs.getString("ma_ky"),
-                                rs.getBigDecimal("diem_qt"),
-                                rs.getBigDecimal("diem_gk"),
-                                rs.getBigDecimal("diem_ck"),
-                                rs.getBigDecimal("diem_tong_ket")
-                        ));
-                    }
+    public List<LecturerCourseDTO> listMyCourses(String lecturerId) {
+        String sql = """
+        SELECT gvm.ma_mon, mh.ten_mon, mh.so_tin_chi, gvm.ma_ky
+        FROM giangvien_monhoc gvm
+        JOIN mon_hoc mh ON mh.ma_mon = gvm.ma_mon
+        WHERE gvm.ma_gv = ?
+        ORDER BY gvm.ma_ky, gvm.ma_mon
+        """;
+        List<LecturerCourseDTO> list = new ArrayList<>();
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, lecturerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new LecturerCourseDTO(
+                            rs.getString("ma_mon"),
+                            rs.getString("ten_mon"),
+                            rs.getInt("so_tin_chi"),
+                            rs.getString("ma_ky")
+                    ));
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException("classTranscript(" + courseId + "," + semesterId + ")", e);
             }
-            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException("listMyCourses(" + lecturerId + ")", e);
+        }
+        return list;
     }
 
-    // ...
-    public int insertLecturer(Connection con, com.example.university.entity.Lecturer g) throws SQLException {
+    public List<ClassTranscriptItemDTO> classTranscript(String courseId, String semesterId) {
         String sql = """
-    INSERT INTO giang_vien(ma_gv, ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, email, ma_khoa)
-    VALUES (?,?,?,?,?,?,?,?)
-  """;
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, g.getId());
-            ps.setString(2, g.getFullName());
-            if (g.getDateOfBirth() != null) ps.setDate(3, java.sql.Date.valueOf(g.getDateOfBirth())); else ps.setNull(3, Types.DATE);
-            if (g.getGender() != null) ps.setString(4, g.getGender().name()); else ps.setNull(4, Types.VARCHAR);
-            ps.setString(5, g.getAddress());
-            ps.setString(6, g.getPhone());
-            ps.setString(7, g.getEmail());
-            ps.setString(8, g.getDepartmentId());
-            return ps.executeUpdate();
+      SELECT
+        kq.ma_sv,
+        sv.ho_ten,
+        kq.ma_mon,
+        mh.ten_mon,
+        mh.so_tin_chi,
+        kq.ma_ky,
+        kq.diem_qt,
+        kq.diem_gk,
+        kq.diem_ck,
+        kq.diem_tong_ket
+      FROM ket_qua_hoc_tap kq
+      JOIN sinh_vien sv ON sv.ma_sv = kq.ma_sv
+      JOIN mon_hoc   mh ON mh.ma_mon = kq.ma_mon
+      WHERE kq.ma_mon = ? AND kq.ma_ky = ?
+      ORDER BY kq.ma_sv
+      """;
+        List<ClassTranscriptItemDTO> list = new ArrayList<>();
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ps.setString(2, semesterId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new ClassTranscriptItemDTO(
+                            rs.getString("ma_sv"),
+                            rs.getString("ho_ten"),
+                            rs.getString("ma_mon"),
+                            rs.getString("ten_mon"),
+                            rs.getInt("so_tin_chi"),
+                            rs.getString("ma_ky"),
+                            rs.getBigDecimal("diem_qt"),
+                            rs.getBigDecimal("diem_gk"),
+                            rs.getBigDecimal("diem_ck"),
+                            rs.getBigDecimal("diem_tong_ket")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("classTranscript(" + courseId + "," + semesterId + ")", e);
         }
+        return list;
     }
 
 }

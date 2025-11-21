@@ -1,5 +1,7 @@
 package com.example.university.service;
 
+import com.example.university.dto.ClassTranscriptItemDTO;
+import com.example.university.dto.LecturerCourseDTO;
 import com.example.university.dto.UpdateGradeRequest;
 import com.example.university.repository.LecturerJdbcRepository;
 import com.example.university.repository.StudentJdbcRepository;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -57,6 +60,31 @@ public class LecturerService {
         if (affected <= 0) {
             throw new ValidationException("Không thể lưu điểm. Vui lòng kiểm tra dữ liệu đầu vào.");
         }
+    }
+
+    // list transcript
+
+    @Transactional(readOnly = true)
+    public List<LecturerCourseDTO> listMyCourses(String lecturerId) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        return lecturerRepo.listMyCourses(gvId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClassTranscriptItemDTO> getClassTranscript(
+            String lecturerId,
+            String courseId,
+            String semesterId
+    ) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        String maMon = normRequired(courseId, "Mã môn").toUpperCase();
+        String maKy  = normSemester(semesterId);
+
+        // Chỉ xem được lớp nếu thực sự được phân công
+        if (!lecturerRepo.canGrade(gvId, maMon, maKy)) {
+            throw new ForbiddenException("Giảng viên không được phân công môn/kỳ này.");
+        }
+        return lecturerRepo.classTranscript(maMon, maKy);
     }
 
     // --------------------- PRIVATE HELPERS ---------------------
