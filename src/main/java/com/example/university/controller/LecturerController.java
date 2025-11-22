@@ -108,6 +108,17 @@ public class LecturerController {
         }
         return ResponseEntity.ok(service.listMyResearchProjects(me.getLecturerId(), semesterId));
     }
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<com.example.university.entity.Lecturer> myProfile(
+            @AuthenticationPrincipal AuthUser me) {
+        if (me.getLecturerId() == null) {
+            return ResponseEntity.status(403).build();
+        }
+        return service.getProfile(me.getLecturerId())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
     /**

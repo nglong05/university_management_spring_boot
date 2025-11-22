@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bảng điểm lớp</title>
+    <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Lecturer Portal</div>
+    <nav class="nav">
+        <a th:href="@{/ui/lecturer/home}" class="nav-link">Chấm điểm</a>
+        <a th:href="@{/ui/lecturer/research}" class="nav-link">NCKH</a>
+        <a th:href="@{/ui/lecturer/profile}" class="nav-link">Thông tin</a>
+        <a th:href="@{/ui/lecturer/courses}" class="nav-link">Môn phân công</a>
+        <span th:if="${session.username != null}"
+              th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+        <a th:href="@{/ui/logout}">
+            <button class="danger">Đăng xuất</button>
+        </a>
+    </nav>
+</header>
+
+<main>
+    <section class="card">
+        <h3>Bảng điểm lớp</h3>
+
+        <p>
+            Môn: <b th:text="${courseId}"></b> -
+            Kỳ: <b th:text="${semesterId}"></b>
+        </p>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>QT</th>
+                    <th>GK</th>
+                    <th>CK</th>
+                    <th>Tổng kết</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${classTranscript}">
+                    <td th:text="${t.studentId}"></td>
+                    <td th:text="${t.studentName}"></td>
+                    <td th:text="${t.processScore}"></td>
+                    <td th:text="${t.midtermScore}"></td>
+                    <td th:text="${t.finalExamScore}"></td>
+                    <td th:text="${t.finalScore}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

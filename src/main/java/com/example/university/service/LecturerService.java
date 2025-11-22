@@ -1,6 +1,7 @@
 package com.example.university.service;
 
 import com.example.university.dto.*;
+import com.example.university.entity.Lecturer;
 import com.example.university.repository.LecturerJdbcRepository;
 import com.example.university.repository.StudentJdbcRepository;
 import com.example.university.service.exception.ForbiddenException;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -59,6 +61,11 @@ public class LecturerService {
         if (affected <= 0) {
             throw new ValidationException("Không thể lưu điểm. Vui lòng kiểm tra dữ liệu đầu vào.");
         }
+    }
+    @Transactional(readOnly = true)
+    public Optional<Lecturer> getProfile(String lecturerId) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        return lecturerRepo.findById(gvId);
     }
 
     // list transcript

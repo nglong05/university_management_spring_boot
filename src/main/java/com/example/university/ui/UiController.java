@@ -52,12 +52,13 @@ public class UiController {
             UiSession uiSession = authService.login(username, password);
             session.setAttribute(SESSION_KEY, uiSession);
             if (uiSession.isStudent()) {
-                return "redirect:/ui/student/home";
+                return "redirect:/ui/student/profile";
             } else if (uiSession.isLecturer()) {
-                return "redirect:/ui/lecturer/home";
+                return "redirect:/ui/lecturer/profile";
             } else if (uiSession.isAdmin()) {
-                return "redirect:/ui/admin/home"; // có thể làm sau
-            } else {
+                return "redirect:/ui/admin/home"; // tạm thời
+            }
+            else {
                 model.addAttribute("loginError", "Vai trò không được hỗ trợ.");
                 return "ui/login";
             }
@@ -74,7 +75,6 @@ public class UiController {
     }
 
     // ================== STUDENT UI ==================
-
     @GetMapping("/student/home")
     public String studentHome(@RequestParam(required = false) String semester,
                               HttpSession session,
@@ -83,27 +83,8 @@ public class UiController {
         if (!ui.isStudent()) {
             return "redirect:/ui/login";
         }
-
-        try {
-            Student profile = studentService.getMyProfile(ui);
-            List<TranscriptItemDTO> transcript = studentService.getMyTranscript(ui, semester);
-            GpaDTO gpa = studentService.getMyGpa(ui, semester);
-            List<ResearchProjectDTO> researchList = studentService.getMyResearch(ui, null);
-
-            model.addAttribute("session", ui);
-            model.addAttribute("profile", profile);
-            model.addAttribute("transcript", transcript);
-            model.addAttribute("gpa", gpa);
-            model.addAttribute("semesterFilter", semester == null ? "" : semester);
-            model.addAttribute("researchList", researchList);
-            model.addAttribute("researchOk", null);
-            model.addAttribute("researchError", null);
-
-            return "ui/student-home";
-        } catch (Exception e) {
-            model.addAttribute("error", "Không tải được dữ liệu sinh viên: " + e.getMessage());
-            return "ui/student-home";
-        }
+        // Ví dụ: coi "profile" là trang chính
+        return "redirect:/ui/student/profile";
     }
 
     @PostMapping("/student/research/register")
@@ -137,25 +118,12 @@ public class UiController {
             model.addAttribute("researchOk", null);
         }
 
-        // Reload lại dữ liệu giống GET /student/home
-        try {
-            Student profile = studentService.getMyProfile(ui);
-            List<TranscriptItemDTO> transcript = studentService.getMyTranscript(ui, null);
-            GpaDTO gpa = studentService.getMyGpa(ui, null);
-            List<ResearchProjectDTO> researchList = studentService.getMyResearch(ui, null);
+        model.addAttribute("session", ui);
+        model.addAttribute("researchList", studentService.getMyResearch(ui, null));
 
-            model.addAttribute("session", ui);
-            model.addAttribute("profile", profile);
-            model.addAttribute("transcript", transcript);
-            model.addAttribute("gpa", gpa);
-            model.addAttribute("semesterFilter", "");
-            model.addAttribute("researchList", researchList);
-        } catch (Exception ex) {
-            model.addAttribute("error", "Không tải được dữ liệu sinh viên: " + ex.getMessage());
-        }
-
-        return "ui/student-home";
+        return "ui/student-research";
     }
+
 
     // ================== LECTURER UI ==================
 
@@ -285,7 +253,6 @@ public class UiController {
     public String lecturerHome(
             @RequestParam(required = false) String courseId,
             @RequestParam(required = false) String semesterId,
-            @RequestParam(required = false, name = "researchSemester") String researchSemester,
             HttpSession session,
             Model model
     ) {
@@ -298,9 +265,7 @@ public class UiController {
         model.addAttribute("gradeError", null);
         model.addAttribute("gradeOk", null);
 
-    /* ==========================
-       1) LOAD CÁC MÔN ĐƯỢC PHÂN CÔNG
-       ========================== */
+        // 1) Danh sách môn được phân công
         try {
             var courses = lecturerService.myCourses(ui);
             model.addAttribute("courses", courses);
@@ -308,9 +273,7 @@ public class UiController {
             model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
         }
 
-    /* ==========================
-       2) LOAD BẢNG ĐIỂM LỚP (NẾU CHỌN)
-       ========================== */
+        // 2) Bảng điểm lớp (nếu đã chọn môn + kỳ)
         if (courseId != null && !courseId.isBlank()
                 && semesterId != null && !semesterId.isBlank()) {
             try {
@@ -323,22 +286,9 @@ public class UiController {
             }
         }
 
-    /* ==========================
-       3) LOAD ĐỀ TÀI NCKH SINH VIÊN HƯỚNG DẪN
-       ========================== */
-        try {
-            var researchList = lecturerService.getMyResearchProjects(ui, researchSemester);
-            model.addAttribute("researchList", researchList);
-        } catch (Exception e) {
-            model.addAttribute("researchError", "Không tải được danh sách đề tài NCKH: " + e.getMessage());
-        }
-
-        model.addAttribute("semesterFilter", researchSemester == null ? "" : researchSemester);
-        model.addAttribute("reviewOk", null);
-        model.addAttribute("reviewError", null);
-
-        return "ui/lecturer-home";
+        return "ui/lecturer-home";   // giờ chỉ là trang chấm điểm
     }
+
 
 
     @PostMapping("/lecturer/research-review")
@@ -372,19 +322,125 @@ public class UiController {
         }
 
         model.addAttribute("session", ui);
-        model.addAttribute("gradeError", null);
-        model.addAttribute("gradeOk", null);
 
-        // load lại danh sách
+        // load lại danh sách đề tài sau khi cập nhật
         try {
-            List<ResearchProjectDTO> research = lecturerService.getMyResearchProjects(ui, filterSemester);
+            java.util.List<ResearchProjectDTO> research = lecturerService.getMyResearchProjects(ui, filterSemester);
             model.addAttribute("researchList", research);
         } catch (Exception e) {
             model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
         }
 
         model.addAttribute("semesterFilter", filterSemester == null ? "" : filterSemester);
-        return "ui/lecturer-home";
+        return "ui/lecturer-research";
+    }
+
+
+    @GetMapping("/lecturer/research")
+    public String lecturerResearch(
+            @RequestParam(required = false, name = "semester") String researchSemester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            return "redirect:/ui/login";
+        }
+
+        model.addAttribute("session", ui);
+        model.addAttribute("reviewOk", null);
+        model.addAttribute("reviewError", null);
+
+        try {
+            var researchList = lecturerService.getMyResearchProjects(ui, researchSemester);
+            model.addAttribute("researchList", researchList);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không tải được danh sách đề tài NCKH: " + e.getMessage());
+        }
+
+        model.addAttribute("semesterFilter", researchSemester == null ? "" : researchSemester);
+        return "ui/lecturer-research";
+    }
+
+
+    @GetMapping("/student/profile")
+    public String studentProfile(HttpSession session, Model model) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isStudent()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("profile", studentService.getMyProfile(ui));
+        return "ui/student-profile";
+    }
+
+    @GetMapping("/student/grades")
+    public String studentGrades(
+            @RequestParam(required = false) String semester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isStudent()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("semesterFilter", semester == null ? "" : semester);
+        model.addAttribute("gpa", studentService.getMyGpa(ui, semester));
+        model.addAttribute("transcript", studentService.getMyTranscript(ui, semester));
+
+        return "ui/student-grades";
+    }
+
+
+    @GetMapping("/student/research")
+    public String studentResearch(HttpSession session, Model model) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isStudent()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("researchList", studentService.getMyResearch(ui, null));
+        model.addAttribute("researchOk", null);
+        model.addAttribute("researchError", null);
+
+        return "ui/student-research";
+    }
+
+    @GetMapping("/lecturer/profile")
+    public String lecturerProfile(HttpSession session, Model model) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("profile", lecturerService.getMyProfile(ui));
+
+        return "ui/lecturer-profile";
+    }
+
+    @GetMapping("/lecturer/courses")
+    public String lecturerCourses(HttpSession session, Model model) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("courses", lecturerService.myCourses(ui));
+
+        return "ui/lecturer-courses";
+    }
+    @GetMapping("/lecturer/class")
+    public String lecturerClass(
+            @RequestParam String course,
+            @RequestParam String semester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) return "redirect:/ui/login";
+
+        model.addAttribute("session", ui);
+        model.addAttribute("classTranscript", lecturerService.classTranscript(ui, course, semester));
+        model.addAttribute("courseId", course);
+        model.addAttribute("semesterId", semester);
+
+        return "ui/lecturer-class";
     }
 
 }

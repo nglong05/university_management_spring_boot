@@ -398,3 +398,46 @@ div > div b {
         page-break-inside: avoid;
     }
 }
+/* Nav links */
+.nav .nav-link {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #e2e8f0;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.nav .nav-link:hover {
+    background: rgba(15, 23, 42, 0.2);
+    border-color: rgba(148, 163, 184, 0.5);
+}
+
+.nav .nav-link.active {
+    background: #ffffff;
+    color: var(--primary);
+    border-color: rgba(148, 163, 184, 0.8);
+    box-shadow: var(--shadow);
+}
+
+/* Link-styled button (PDF, v.v.) */
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--primary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--primary);
+    background: #eff6ff;
+    font-weight: 500;
+    gap: 0.4rem;
+}
+
+.btn-link:hover {
+    background: #ffffff;
+    box-shadow: var(--shadow);
+}

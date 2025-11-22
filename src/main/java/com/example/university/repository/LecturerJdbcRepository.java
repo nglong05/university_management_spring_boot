@@ -1,10 +1,12 @@
 package com.example.university.repository;
 
 import com.example.university.dto.*;
+import com.example.university.entity.Lecturer;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.*;
@@ -34,6 +36,34 @@ public class LecturerJdbcRepository {
         }
     }
 
+    public Optional<Lecturer> findById(String id) {
+        String sql = """
+        SELECT ma_gv, ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, email, ma_khoa
+        FROM giang_vien
+        WHERE ma_gv = ?
+        """;
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return Optional.empty();
+                com.example.university.entity.Lecturer g = new com.example.university.entity.Lecturer();
+                g.setId(rs.getString("ma_gv"));
+                g.setFullName(rs.getString("ho_ten"));
+                Date d = rs.getDate("ngay_sinh");
+                if (d != null) g.setDateOfBirth(d.toLocalDate());
+                String sex = rs.getString("gioi_tinh");
+                g.setGender(sex != null ? com.example.university.entity.Gender.fromDb(sex) : null);
+                g.setAddress(rs.getString("dia_chi"));
+                g.setPhone(rs.getString("so_dien_thoai"));
+                g.setEmail(rs.getString("email"));
+                g.setDepartmentId(rs.getString("ma_khoa"));
+                return Optional.of(g);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("findById(" + id + ")", e);
+        }
+    }
 
     // update or insert a student's grade
     public int upsertGrade(UpdateGradeRequest req) {

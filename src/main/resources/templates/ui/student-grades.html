@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Student | Điểm & GPA</title>
+  <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Student Portal</div>
+  <nav class="nav">
+    <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
+    <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
+    <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
+    <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+    <span th:if="${session.username != null}"
+          th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+    <a th:href="@{/ui/logout}">
+      <button class="danger">Đăng xuất</button>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <h3>GPA & lọc theo kỳ</h3>
+
+    <form class="form" method="get">
+      <div class="row">
+        <label>Kỳ (vd: 2025-1, để trống = tất cả)
+          <input name="semester" th:value="${semesterFilter}">
+        </label>
+      </div>
+      <div class="row mt-1">
+        <button type="submit">Lọc</button>
+
+        <!-- NÚT XUẤT PDF -->
+        <a th:href="@{'/ui/student/export-pdf'(semester=${semesterFilter})}"
+           class="btn-link">
+          Xuất PDF bảng điểm
+        </a>
+      </div>
+    </form>
+
+    <div class="mt-2">
+      <p>GPA hệ 10: <b th:text="${gpa.gpa10}">0.0</b></p>
+      <p>GPA hệ 4: <b th:text="${gpa.gpa4}">0.0</b></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Bảng điểm chi tiết</h3>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Môn</th>
+          <th>TC</th>
+          <th>QT</th>
+          <th>GK</th>
+          <th>CK</th>
+          <th>Tổng kết</th>
+          <th>Kỳ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t: ${transcript}">
+          <td th:text="${t.courseName}"></td>
+          <td th:text="${t.credits}"></td>
+          <td th:text="${t.processScore}"></td>
+          <td th:text="${t.midtermScore}"></td>
+          <td th:text="${t.finalExamScore}"></td>
+          <td th:text="${t.finalScore}"></td>
+          <td th:text="${t.semesterId}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

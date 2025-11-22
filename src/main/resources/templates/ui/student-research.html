@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đề tài nghiên cứu khoa học</title>
+  <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Student Portal</div>
+  <nav class="nav">
+    <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
+    <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
+    <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
+    <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+    <span th:if="${session.username != null}"
+          th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+    <a th:href="@{/ui/logout}">
+      <button class="danger">Đăng xuất</button>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <!-- Form đăng ký -->
+  <section class="card form">
+    <h3>Đăng ký đề tài NCKH</h3>
+    <form th:action="@{/ui/student/research/register}" method="post">
+      <div class="row">
+        <label>Mã giảng viên
+          <input type="text" name="maGv" placeholder="GV001" required>
+        </label>
+        <label>Kỳ học
+          <input type="text" name="maKy" placeholder="2025-1" required>
+        </label>
+      </div>
+      <label>Tên đề tài
+        <input type="text" name="tenDeTai" placeholder="Ứng dụng machine learning..." required>
+      </label>
+      <label>Mô tả ngắn
+        <input type="text" name="moTa" placeholder="Ý tưởng, phạm vi, mục tiêu..." required>
+      </label>
+      <label>File đính kèm (link Drive/GitHub, tuỳ chọn)
+        <input type="text" name="fileDinhKem" placeholder="https://...">
+      </label>
+      <button type="submit">Đăng ký đề tài</button>
+    </form>
+
+    <p class="msg" style="color:#22c55e" th:text="${researchOk}"></p>
+    <p class="msg" style="color:#f97316" th:text="${researchError}"></p>
+  </section>
+
+  <!-- Danh sách đề tài -->
+  <section class="card">
+    <h3>Đề tài đã đăng ký</h3>
+
+    <div class="table-wrap" th:if="${researchList != null and #lists.size(researchList) > 0}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>GV hướng dẫn</th>
+          <th>Kỳ</th>
+          <th>Tên đề tài</th>
+          <th>Trạng thái</th>
+          <th>Kết quả</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${researchList}">
+          <td th:text="${r.lecturerName} + ' (' + ${r.lecturerId} + ')'">GV A (GV001)</td>
+          <td th:text="${r.semesterId}">2025-1</td>
+          <td th:text="${r.topicTitle}">Đề tài</td>
+          <td th:text="${r.status}">CHO_DUYET</td>
+          <td th:text="${r.result} ?: '-'">-</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${researchList == null || #lists.size(researchList) == 0}">
+      Chưa đăng ký đề tài nào.
+    </p>
+  </section>
+</main>
+</body>
+</html>

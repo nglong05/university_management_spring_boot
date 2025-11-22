@@ -1,6 +1,7 @@
 package com.example.university.ui;
 
 import com.example.university.dto.*;
+import com.example.university.entity.Lecturer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -23,6 +24,21 @@ public class UiLecturerService {
         h.setBearerAuth(s.getJwt());
         h.setContentType(MediaType.APPLICATION_JSON);
         return h;
+    }
+    public Lecturer getMyProfile(UiSession s) {
+        HttpHeaders headers = authHeaders(s);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Lecturer> resp = restTemplate.exchange(
+                "/api/lecturers/me",
+                HttpMethod.GET,
+                entity,
+                Lecturer.class
+        );
+        if (!resp.getStatusCode().is2xxSuccessful() || resp.getBody() == null) {
+            throw new RuntimeException("Không tải được hồ sơ giảng viên.");
+        }
+        return resp.getBody();
     }
 
     public void updateGrade(UiSession s, UpdateGradeRequest req) {

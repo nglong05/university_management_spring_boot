@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS users;
-
-DROP TABLE IF EXISTS nghien_cuu_khoa_hoc;
-DROP TABLE IF EXISTS ket_qua_hoc_tap;
-
-DROP TABLE IF EXISTS giangvien_monhoc;
-DROP TABLE IF EXISTS giang_vien;
-DROP TABLE IF EXISTS sinh_vien;
-
-DROP TABLE IF EXISTS ky_hoc;
-DROP TABLE IF EXISTS mon_hoc;
-DROP TABLE IF EXISTS nganh_hoc;
-DROP TABLE IF EXISTS khoa;
+# DROP TABLE IF EXISTS users;
+#
+# DROP TABLE IF EXISTS nghien_cuu_khoa_hoc;
+# DROP TABLE IF EXISTS ket_qua_hoc_tap;
+#
+# DROP TABLE IF EXISTS giangvien_monhoc;
+# DROP TABLE IF EXISTS giang_vien;
+# DROP TABLE IF EXISTS sinh_vien;
+#
+# DROP TABLE IF EXISTS ky_hoc;
+# DROP TABLE IF EXISTS mon_hoc;
+# DROP TABLE IF EXISTS nganh_hoc;
+# DROP TABLE IF EXISTS khoa;
 
 
 

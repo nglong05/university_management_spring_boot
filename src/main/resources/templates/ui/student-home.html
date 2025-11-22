@@ -9,7 +9,12 @@
 <header class="topbar">
     <div class="brand">Student Portal</div>
     <nav class="nav">
-        <span th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+        <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
+        <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
+        <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
+        <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+        <span th:if="${session.username != null}"
+              th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
         <a th:href="@{/ui/logout}">
             <button class="danger">Đăng xuất</button>
         </a>

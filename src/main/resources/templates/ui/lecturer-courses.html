@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Môn học được phân công</title>
+  <link rel="stylesheet" th:href="@{/assets/style.css}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Lecturer Portal</div>
+  <nav class="nav">
+    <a th:href="@{/ui/lecturer/home}" class="nav-link">Chấm điểm</a>
+    <a th:href="@{/ui/lecturer/research}" class="nav-link">NCKH</a>
+    <a th:href="@{/ui/lecturer/profile}" class="nav-link">Thông tin</a>
+    <a th:href="@{/ui/lecturer/courses}" class="nav-link">Môn phân công</a>
+    <span th:if="${session.username != null}"
+          th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
+    <a th:href="@{/ui/logout}">
+      <button class="danger">Đăng xuất</button>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <h3>Môn học được phân công</h3>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+        <tr><th>Môn</th><th>Tín chỉ</th><th>Kỳ</th><th>Xem lớp</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${courses}">
+          <td th:text="${c.courseName}"></td>
+          <td th:text="${c.credits}"></td>
+          <td th:text="${c.semesterId}"></td>
+          <td>
+            <a th:href="@{|/ui/lecturer/class?course=${c.courseId}&semester=${c.semesterId}|}">
+              Xem lớp
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>
