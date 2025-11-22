@@ -7,12 +7,11 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">Lecturer Portal</div>
+  <div class="brand">Cổng thông tin giảng viên</div>
   <nav class="nav">
-    <a th:href="@{/ui/lecturer/home}" class="nav-link">Chấm điểm</a>
-    <a th:href="@{/ui/lecturer/research}" class="nav-link">NCKH</a>
     <a th:href="@{/ui/lecturer/profile}" class="nav-link">Thông tin</a>
-    <a th:href="@{/ui/lecturer/courses}" class="nav-link">Môn phân công</a>
+    <a th:href="@{/ui/lecturer/home}" class="nav-link">Lớp &amp; điểm</a>
+    <a th:href="@{/ui/lecturer/research}" class="nav-link">Nghiên cứu khoa học</a>
     <span th:if="${session.username != null}"
           th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
     <a th:href="@{/ui/logout}">
@@ -23,88 +22,19 @@
 
 <main>
 
-  <!-- CARD 1: Form nhập / sửa điểm -->
-  <section class="card form">
-    <h3>Nhập / sửa điểm sinh viên</h3>
-    <form th:action="@{/ui/lecturer/grade}" method="post">
-      <div class="row">
-        <label>Mã SV
-          <input name="maSv" placeholder="SV..." required>
-        </label>
-        <label>Mã môn
-          <input name="maMon" placeholder="CT101" required
-                 th:value="${selectedCourseId}">
-        </label>
-        <label>Mã kỳ
-          <input name="maKy" placeholder="2025-1" required
-                 th:value="${selectedSemesterId}">
-        </label>
-      </div>
-      <div class="row">
-        <label>Điểm QT
-          <input name="diemQt" type="number" step="0.01" min="0" max="10" value="7.0" required>
-        </label>
-        <label>Điểm GK
-          <input name="diemGk" type="number" step="0.01" min="0" max="10" value="6.5" required>
-        </label>
-        <label>Điểm CK
-          <input name="diemCk" type="number" step="0.01" min="0" max="10" value="7.5" required>
-        </label>
-      </div>
-      <button type="submit">Ghi điểm</button>
-    </form>
+  <!-- CARD: Bảng điểm lớp đang xem -->
+  <section class="card" th:if="${classTranscript != null}" id="class-view">
+    <h3>Bảng điểm</h3>
+    <p class="msg" style="color:#f97316" th:text="${classTranscriptError}"></p>
     <p class="msg" style="color:#22c55e" th:text="${gradeOk}"></p>
     <p class="msg" style="color:#f97316" th:text="${gradeError}"></p>
-    <p class="hint">
-      Quyền chấm điểm dựa vào bảng <code>giangvien_monhoc</code>.
-    </p>
-  </section>
-
-  <!-- CARD 2: Danh sách môn được phân công -->
-  <section class="card">
-    <h3>Môn học bạn được phân công</h3>
-    <p class="msg" style="color:#f97316" th:text="${coursesError}"></p>
-
-    <div class="table-wrap" th:if="${courses != null and #lists.size(courses) > 0}">
-      <table class="table">
-        <thead>
-        <tr>
-          <th>Mã môn</th>
-          <th>Tên môn</th>
-          <th>TC</th>
-          <th>Kỳ</th>
-          <th>Xem lớp</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="c : ${courses}">
-          <td th:text="${c.courseId}">CT101</td>
-          <td th:text="${c.courseName}">Nhập môn</td>
-          <td th:text="${c.credits}">3</td>
-          <td th:text="${c.semesterId}">2025-1</td>
-          <td>
-            <a th:href="@{|/ui/lecturer/home?courseId=${c.courseId}&semesterId=${c.semesterId}|}">
-              Xem lớp
-            </a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p th:if="${courses == null or #lists.size(courses) == 0}">
-      Bạn chưa được phân công môn nào.
-    </p>
-  </section>
-
-  <!-- CARD 3: Bảng điểm lớp -->
-  <section class="card" th:if="${classTranscript != null}">
-    <h3>Bảng điểm lớp</h3>
-    <p class="msg" style="color:#f97316" th:text="${classTranscriptError}"></p>
 
     <p th:if="${selectedCourseId != null}">
-      Môn: <b th:text="${selectedCourseId}">CT101</b> -
-      Kỳ: <b th:text="${selectedSemesterId}">2025-1</b>
+      Môn: <b th:text="${selectedCourseId}">CT101</b> - <span th:text="${selectedCourseName}"></span>
+      &nbsp;|&nbsp; Kỳ: <b th:text="${selectedSemesterId}">2025-1</b>
+    </p>
+    <p>
+      <a th:href="@{/ui/lecturer/home}" class="btn-link">Chọn lớp khác</a>
     </p>
 
     <div class="table-wrap" th:if="${classTranscript != null and #lists.size(classTranscript) > 0}">
@@ -117,16 +47,39 @@
           <th>GK</th>
           <th>CK</th>
           <th>Tổng kết</th>
+          <th>Cập nhật</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="row : ${classTranscript}">
           <td th:text="${row.studentId}">SV001</td>
           <td th:text="${row.studentName}">Nguyễn Văn A</td>
-          <td th:text="${row.processScore}">8.0</td>
-          <td th:text="${row.midtermScore}">7.5</td>
-          <td th:text="${row.finalExamScore}">8.0</td>
+          <td>
+            <input name="diemQt" type="number" step="0.01" min="0" max="10"
+                   th:attr="form=${'gradeForm' + row.studentId}"
+                   th:value="${row.processScore}">
+          </td>
+          <td>
+            <input name="diemGk" type="number" step="0.01" min="0" max="10"
+                   th:attr="form=${'gradeForm' + row.studentId}"
+                   th:value="${row.midtermScore}">
+          </td>
+          <td>
+            <input name="diemCk" type="number" step="0.01" min="0" max="10"
+                   th:attr="form=${'gradeForm' + row.studentId}"
+                   th:value="${row.finalExamScore}">
+          </td>
           <td th:text="${row.finalScore}">7.9</td>
+          <td>
+            <form th:id="'gradeForm' + ${row.studentId}"
+                  th:action="@{/ui/lecturer/grade}"
+                  method="post" class="row" style="gap:8px; align-items:center;">
+              <input type="hidden" name="maSv" th:value="${row.studentId}">
+              <input type="hidden" name="maMon" th:value="${selectedCourseId}">
+              <input type="hidden" name="maKy" th:value="${selectedSemesterId}">
+              <button type="submit">Lưu</button>
+            </form>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -137,22 +90,51 @@
     </p>
   </section>
 
-  <!-- CARD 4: Xuất PDF bảng điểm lớp -->
-  <section class="card form">
-    <h3>Xuất PDF bảng điểm lớp</h3>
-    <form th:action="@{/ui/lecturer/class-pdf}" method="get">
-      <div class="row">
-        <label>Mã môn
-          <input name="maMon" placeholder="CT101" required>
-        </label>
-        <label>Mã kỳ
-          <input name="maKy" placeholder="2024-1" required>
-        </label>
-      </div>
-      <button type="submit">Tải PDF</button>
-    </form>
+  <!-- CARD: Danh sách lớp / môn được phân công -->
+  <section class="card" th:if="${classTranscript == null}">
+    <h3>Lớp bạn được phân công</h3>
+    <p class="msg" style="color:#f97316" th:text="${coursesError}"></p>
+
+    <div class="table-wrap" th:if="${courses != null and #lists.size(courses) > 0}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Mã môn</th>
+          <th>Tên môn</th>
+          <th>TC</th>
+          <th>Kỳ</th>
+          <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${courses}">
+          <td th:text="${c.courseId}">CT101</td>
+          <td th:text="${c.courseName}">Nhập môn</td>
+          <td th:text="${c.credits}">3</td>
+          <td th:text="${c.semesterId}">2025-1</td>
+          <td>
+            <div class="row" style="gap:8px; align-items:center;">
+              <a class="btn-link"
+                 th:href="@{|/ui/lecturer/home?courseId=${c.courseId}&semesterId=${c.semesterId}#class-view|}">
+                Xem lớp
+              </a>
+              <a class="btn-link"
+                 th:href="@{|/ui/lecturer/class-pdf?maMon=${c.courseId}&maKy=${c.semesterId}|}">
+                Xuất PDF
+              </a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${courses == null or #lists.size(courses) == 0}">
+      Bạn chưa được phân công môn nào.
+    </p>
   </section>
 
+  <!-- CARD 3: Bảng điểm lớp -->
 </main>
 </body>
 </html>

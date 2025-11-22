@@ -55,3 +55,7 @@ adding the research feature
 doing complex query for listing the researches in the repo
 doing the gui for the researches
 
+fix numerous gui for both student and lecturer
+implement pdf export
+TODO: input validation
+TODO: implement docker

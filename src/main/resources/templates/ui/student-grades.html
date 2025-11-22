@@ -2,17 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Student | Điểm & GPA</title>
+  <title>Điểm</title>
   <link rel="stylesheet" th:href="@{/assets/style.css}">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">Student Portal</div>
+  <div class="brand">Cổng thông tin sinh viên</div>
   <nav class="nav">
-    <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
     <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
     <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
-    <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+    <a th:href="@{/ui/student/research}" class="nav-link">Nghiên cứu khoa học</a>
     <span th:if="${session.username != null}"
           th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
     <a th:href="@{/ui/logout}">
@@ -23,18 +22,16 @@
 
 <main>
   <section class="card">
-    <h3>GPA & lọc theo kỳ</h3>
+    <h3>GPA</h3>
 
     <form class="form" method="get">
       <div class="row">
-        <label>Kỳ (vd: 2025-1, để trống = tất cả)
+        <label>Kỳ học
           <input name="semester" th:value="${semesterFilter}">
         </label>
       </div>
       <div class="row mt-1">
-        <button type="submit">Lọc</button>
-
-        <!-- NÚT XUẤT PDF -->
+        <button type="submit">Tìm kiếm theo kỳ học</button>
         <a th:href="@{'/ui/student/export-pdf'(semester=${semesterFilter})}"
            class="btn-link">
           Xuất PDF bảng điểm
@@ -56,12 +53,12 @@
         <thead>
         <tr>
           <th>Môn</th>
-          <th>TC</th>
-          <th>QT</th>
-          <th>GK</th>
-          <th>CK</th>
+          <th>Tín chỉ</th>
+          <th>Điểm quá trình</th>
+          <th>Điểm giữa kỳ</th>
+          <th>Điểm cuối kỳ</th>
           <th>Tổng kết</th>
-          <th>Kỳ</th>
+          <th>Kỳ học</th>
         </tr>
         </thead>
         <tbody>

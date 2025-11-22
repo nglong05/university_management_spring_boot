@@ -83,7 +83,7 @@ public class UiController {
         if (!ui.isStudent()) {
             return "redirect:/ui/login";
         }
-        // Ví dụ: coi "profile" là trang chính
+        // Không dùng trang home nữa, chuyển thẳng sang hồ sơ
         return "redirect:/ui/student/profile";
     }
 
@@ -175,6 +175,9 @@ public class UiController {
             model.addAttribute("classTranscript", classTranscript);
             model.addAttribute("selectedCourseId", maMon);
             model.addAttribute("selectedSemesterId", maKy);
+            if (classTranscript != null && !classTranscript.isEmpty()) {
+                model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
+            }
         } catch (Exception e) {
             model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
         }
@@ -281,6 +284,9 @@ public class UiController {
                 model.addAttribute("classTranscript", classTranscript);
                 model.addAttribute("selectedCourseId", courseId);
                 model.addAttribute("selectedSemesterId", semesterId);
+                if (classTranscript != null && !classTranscript.isEmpty()) {
+                    model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
+                }
             } catch (Exception e) {
                 model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
             }

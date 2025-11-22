@@ -33,13 +33,27 @@ public class StudentJdbcRepository {
         s.setEmail(rs.getString("email"));
         s.setDepartmentID(rs.getString("ma_khoa"));
         s.setMajorID(rs.getString("ma_nganh_hoc"));
+        if (hasColumn(rs, "ten_khoa")) {
+            s.setDepartmentName(rs.getString("ten_khoa"));
+        }
+        if (hasColumn(rs, "ten_nganh_hoc")) {
+            s.setMajorName(rs.getString("ten_nganh_hoc"));
+        }
         return s;
     }
 
 
     // queries
     public Optional<Student> findById(String id) throws SQLException {
-        String sql = "SELECT * FROM sinh_vien WHERE ma_sv = ?";
+        String sql = """
+        SELECT sv.*,
+               k.ten_khoa,
+               ng.ten_nganh_hoc
+        FROM sinh_vien sv
+        LEFT JOIN khoa k ON k.ma_khoa = sv.ma_khoa
+        LEFT JOIN nganh_hoc ng ON ng.ma_nganh_hoc = sv.ma_nganh_hoc
+        WHERE sv.ma_sv = ?
+        """;
         try (
             Connection con = dataSource.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)
@@ -169,4 +183,18 @@ public class StudentJdbcRepository {
         }
     }
 
+    private static boolean hasColumn(ResultSet rs, String column) {
+        try {
+            ResultSetMetaData meta = rs.getMetaData();
+            int count = meta.getColumnCount();
+            for (int i = 1; i <= count; i++) {
+                if (column.equalsIgnoreCase(meta.getColumnName(i))) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }

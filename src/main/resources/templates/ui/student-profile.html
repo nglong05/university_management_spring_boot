@@ -7,12 +7,11 @@
 </head>
 <body>
 <header class="topbar">
-    <div class="brand">Student Portal</div>
+    <div class="brand">Cổng thông tin sinh viên</div>
     <nav class="nav">
-        <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
         <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
         <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
-        <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+        <a th:href="@{/ui/student/research}" class="nav-link">Nghiên cứu khoa học</a>
         <span th:if="${session.username != null}"
               th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
         <a th:href="@{/ui/logout}">
@@ -31,8 +30,14 @@
             <tr><th>Ngày sinh</th><td th:text="${profile.dateOfBirth}"></td></tr>
             <tr><th>Giới tính</th><td th:text="${profile.gender}"></td></tr>
             <tr><th>Email</th><td th:text="${profile.email}"></td></tr>
-            <tr><th>Khoa</th><td th:text="${profile.departmentID}"></td></tr>
-            <tr><th>Ngành</th><td th:text="${profile.majorID}"></td></tr>
+            <tr>
+                <th>Khoa</th>
+                <td th:text="${profile.departmentName} ?: ${profile.departmentID}"></td>
+            </tr>
+            <tr>
+                <th>Ngành</th>
+                <td th:text="${profile.majorName} ?: ${profile.majorID}"></td>
+            </tr>
             </tbody>
         </table>
         <p th:if="${profile == null}">Không có dữ liệu hồ sơ.</p>

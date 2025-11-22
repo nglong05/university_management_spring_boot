@@ -53,8 +53,9 @@ public class ClassTranscriptPdfExporter {
                        OutputStream out) throws DocumentException {
 
         Document doc = new Document(PageSize.A4.rotate(), 36, 36, 54, 36);
-        PdfWriter.getInstance(doc, out);
+        PdfWriter writer = PdfWriter.getInstance(doc, out);
         doc.open();
+        addWatermark(writer, doc);
 
         // --- Header ---
         Paragraph title = new Paragraph("BẢNG ĐIỂM LỚP HỌC", titleFont);
@@ -76,13 +77,13 @@ public class ClassTranscriptPdfExporter {
         PdfPTable tbl = new PdfPTable(new float[]{1.2f, 3f, 5f, 2f, 2f, 2f, 2f});
         tbl.setWidthPercentage(100);
 
-        tbl.addCell(cell("STT", headerFont));
-        tbl.addCell(cell("Mã SV", headerFont));
+        tbl.addCell(cell("Số thứ tự", headerFont));
+        tbl.addCell(cell("Mã sinh viên", headerFont));
         tbl.addCell(cell("Họ tên", headerFont));
-        tbl.addCell(cell("QT", headerFont));
-        tbl.addCell(cell("GK", headerFont));
-        tbl.addCell(cell("CK", headerFont));
-        tbl.addCell(cell("TK", headerFont));
+        tbl.addCell(cell("Điểm quá trình", headerFont));
+        tbl.addCell(cell("Điểm giữa kỳ", headerFont));
+        tbl.addCell(cell("Điểm cuối kỳ", headerFont));
+        tbl.addCell(cell("Tổng kết", headerFont));
 
         int i = 1;
         for (ClassTranscriptItemDTO row : rows) {
@@ -97,5 +98,32 @@ public class ClassTranscriptPdfExporter {
 
         doc.add(tbl);
         doc.close();
+    }
+
+    private void addWatermark(PdfWriter writer, Document doc) {
+        try {
+            var logoUrl = ClassTranscriptPdfExporter.class
+                    .getClassLoader()
+                    .getResource("static/assets/logo-ptit.png");
+            if (logoUrl == null) return;
+
+            Image logo = Image.getInstance(logoUrl);
+            logo.scaleToFit(320, 320);
+
+            float x = (doc.getPageSize().getWidth() - logo.getScaledWidth()) / 2;
+            float y = (doc.getPageSize().getHeight() - logo.getScaledHeight()) / 2;
+            logo.setAbsolutePosition(x, y);
+
+            PdfContentByte under = writer.getDirectContentUnder();
+            PdfGState gs = new PdfGState();
+            gs.setFillOpacity(0.15f);
+
+            under.saveState();
+            under.setGState(gs);
+            under.addImage(logo);
+            under.restoreState();
+        } catch (Exception ignored) {
+            // Không chặn export nếu logo lỗi
+        }
     }
 }

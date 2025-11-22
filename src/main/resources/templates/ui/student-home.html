@@ -7,12 +7,11 @@
 </head>
 <body>
 <header class="topbar">
-    <div class="brand">Student Portal</div>
+    <div class="brand">Cổng thông tin sinh viên</div>
     <nav class="nav">
-        <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
         <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
         <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
-        <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+        <a th:href="@{/ui/student/research}" class="nav-link">Nghiên cứu khoa học</a>
         <span th:if="${session.username != null}"
               th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
         <a th:href="@{/ui/logout}">
@@ -25,18 +24,13 @@
     <section class="grid-2">
         <!-- Hồ sơ -->
         <div class="card">
-            <h3>Hồ sơ sinh viên</h3>
-            <table class="table" th:if="${profile != null}">
-                <tbody>
-                <tr><th>Mã SV</th><td th:text="${profile.id}"></td></tr>
-                <tr><th>Họ tên</th><td th:text="${profile.fullName}"></td></tr>
-                <tr><th>Ngày sinh</th><td th:text="${profile.dateOfBirth}"></td></tr>
-                <tr><th>Giới tính</th><td th:text="${profile.gender}"></td></tr>
-                <tr><th>Email</th><td th:text="${profile.email}"></td></tr>
-                <tr><th>Khoa</th><td th:text="${profile.departmentID}"></td></tr>
-                <tr><th>Chuyen nganh</th><td th:text="${profile.majorID}"></td></tr>
-                </tbody>
-            </table>
+            <h3>Tổng quan sinh viên</h3>
+            <div th:if="${profile != null}">
+                <p><b th:text="${profile.fullName}"></b> (MSSV: <span th:text="${profile.id}"></span>)</p>
+                <p>Khoa: <span th:text="${profile.departmentName} ?: ${profile.departmentID}"></span></p>
+                <p>Ngành: <span th:text="${profile.majorName} ?: ${profile.majorID}"></span></p>
+                <a th:href="@{/ui/student/profile}" class="btn-link">Xem chi tiết hồ sơ</a>
+            </div>
             <p th:if="${profile == null}">Không có dữ liệu hồ sơ.</p>
         </div>
 

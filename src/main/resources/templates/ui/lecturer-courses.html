@@ -7,12 +7,11 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">Lecturer Portal</div>
+  <div class="brand">Cổng thông tin giảng viên</div>
   <nav class="nav">
-    <a th:href="@{/ui/lecturer/home}" class="nav-link">Chấm điểm</a>
-    <a th:href="@{/ui/lecturer/research}" class="nav-link">NCKH</a>
     <a th:href="@{/ui/lecturer/profile}" class="nav-link">Thông tin</a>
-    <a th:href="@{/ui/lecturer/courses}" class="nav-link">Môn phân công</a>
+    <a th:href="@{/ui/lecturer/home}" class="nav-link">Lớp &amp; điểm</a>
+    <a th:href="@{/ui/lecturer/research}" class="nav-link">Nghiên cứu khoa học</a>
     <span th:if="${session.username != null}"
           th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
     <a th:href="@{/ui/logout}">
@@ -36,7 +35,7 @@
           <td th:text="${c.credits}"></td>
           <td th:text="${c.semesterId}"></td>
           <td>
-            <a th:href="@{|/ui/lecturer/class?course=${c.courseId}&semester=${c.semesterId}|}">
+            <a th:href="@{|/ui/lecturer/home?courseId=${c.courseId}&semesterId=${c.semesterId}|}">
               Xem lớp
             </a>
           </td>

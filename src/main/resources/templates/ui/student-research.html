@@ -2,17 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Đề tài nghiên cứu khoa học</title>
+  <title>Đề tài nghiên cứu</title>
   <link rel="stylesheet" th:href="@{/assets/style.css}">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">Student Portal</div>
+  <div class="brand">Cổng thông tin sinh viên</div>
   <nav class="nav">
-    <a th:href="@{/ui/student/home}" class="nav-link">Tổng quan</a>
     <a th:href="@{/ui/student/profile}" class="nav-link">Thông tin</a>
     <a th:href="@{/ui/student/grades}" class="nav-link">Điểm</a>
-    <a th:href="@{/ui/student/research}" class="nav-link">NCKH</a>
+    <a th:href="@{/ui/student/research}" class="nav-link">Nghiên cứu khoa học</a>
     <span th:if="${session.username != null}"
           th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
     <a th:href="@{/ui/logout}">
@@ -24,11 +23,11 @@
 <main>
   <!-- Form đăng ký -->
   <section class="card form">
-    <h3>Đăng ký đề tài NCKH</h3>
+    <h3>Đăng ký đề tài nghiên cứu khoa học</h3>
     <form th:action="@{/ui/student/research/register}" method="post">
       <div class="row">
         <label>Mã giảng viên
-          <input type="text" name="maGv" placeholder="GV001" required>
+          <input type="text" name="maGv" placeholder="GVXXXXX" required>
         </label>
         <label>Kỳ học
           <input type="text" name="maKy" placeholder="2025-1" required>
@@ -40,7 +39,7 @@
       <label>Mô tả ngắn
         <input type="text" name="moTa" placeholder="Ý tưởng, phạm vi, mục tiêu..." required>
       </label>
-      <label>File đính kèm (link Drive/GitHub, tuỳ chọn)
+      <label>File đính kèm (GGDrive/GitHub, ...)
         <input type="text" name="fileDinhKem" placeholder="https://...">
       </label>
       <button type="submit">Đăng ký đề tài</button>
@@ -59,8 +58,8 @@
         <thead>
         <tr>
           <th>GV hướng dẫn</th>
-          <th>Kỳ</th>
-          <th>Tên đề tài</th>
+          <th>Kỳ học</th>
+          <th>Đề tài</th>
           <th>Trạng thái</th>
           <th>Kết quả</th>
         </tr>

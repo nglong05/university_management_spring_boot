@@ -1,8 +1,8 @@
 package com.example.university.service.export;
 
-import com.example.university.dto.ClassGradeDTO;
 import com.example.university.dto.ClassTranscriptItemDTO;
 import com.example.university.export.ClassTranscriptPdfExporter;
+import com.example.university.entity.Lecturer;
 import com.example.university.repository.LecturerJdbcRepository;
 import com.example.university.service.exception.ForbiddenException;
 import com.example.university.service.exception.ValidationException;
@@ -42,7 +42,12 @@ public class LecturerClassPdfService {
         try {
             ClassTranscriptPdfExporter exporter = new ClassTranscriptPdfExporter();
             String courseName = rows.isEmpty() ? "" : rows.get(0).courseName();
-            exporter.export(maMon, courseName, maKy, lecturerLabel, rows, out);
+            String lecturerName = lecturerRepo.findById(maGv)
+                    .map(Lecturer::getFullName)
+                    .filter(name -> !name.isBlank())
+                    .orElse(lecturerLabel == null || lecturerLabel.isBlank() ? maGv : lecturerLabel);
+
+            exporter.export(maMon, courseName, maKy, lecturerName, rows, out);
         } catch (Exception e) {
             throw new RuntimeException("Không thể xuất PDF lớp học", e);
         }

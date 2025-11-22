@@ -2,17 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lecturer - Đề tài NCKH</title>
+    <title>Nghiên cứu khoa học</title>
     <link rel="stylesheet" th:href="@{/assets/style.css}">
 </head>
 <body>
 <header class="topbar">
-    <div class="brand">Lecturer Portal</div>
+    <div class="brand">Cổng thông tin giảng viên</div>
     <nav class="nav">
-        <a th:href="@{/ui/lecturer/home}" class="nav-link">Chấm điểm</a>
-        <a th:href="@{/ui/lecturer/research}" class="nav-link">NCKH</a>
         <a th:href="@{/ui/lecturer/profile}" class="nav-link">Thông tin</a>
-        <a th:href="@{/ui/lecturer/courses}" class="nav-link">Môn phân công</a>
+        <a th:href="@{/ui/lecturer/home}" class="nav-link">Lớp &amp; điểm</a>
+        <a th:href="@{/ui/lecturer/research}" class="nav-link">Nghiên cứu khoa học</a>
         <span th:if="${session.username != null}"
               th:text="${session.username} + ' (' + ${session.role} + ')'"></span>
         <a th:href="@{/ui/logout}">
@@ -25,7 +24,7 @@
 
     <!-- Lọc & danh sách đề tài NCKH -->
     <section class="card">
-        <h3>Đề tài NCKH sinh viên hướng dẫn</h3>
+        <h3>Đề tài nghiên cứu khoa học bạn hướng dẫn</h3>
 
         <form th:action="@{/ui/lecturer/research}" method="get" class="form">
             <label>Kỳ học (vd: 2025-1, để trống = tất cả)
@@ -42,13 +41,14 @@
                 <thead>
                 <tr>
                     <th>Sinh viên</th>
-                    <th>Mã SV</th>
-                    <th>Kỳ</th>
+                    <th>Mã sinh viên</th>
+                    <th>Kỳ học</th>
                     <th>Tên đề tài</th>
                     <th>Mô tả</th>
                     <th>Trạng thái</th>
-                    <th>Kết quả / Nhận xét</th>
-                    <th>Ngày ĐK</th>
+                    <th>Nhận xét</th>
+                    <th>Ngày đăng ký</th>
+                    <th>Cập nhật</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,6 +61,21 @@
                     <td th:text="${rp.status}">CHO_DUYET</td>
                     <td th:text="${rp.result} ?: '-'">Nhận xét</td>
                     <td th:text="${#temporals.format(rp.registeredAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+                    <td>
+                        <form th:action="@{/ui/lecturer/research-review}" method="post" class="row" style="gap:8px;">
+                            <input type="hidden" name="maSv" th:value="${rp.studentId}">
+                            <input type="hidden" name="maKy" th:value="${rp.semesterId}">
+                            <input type="hidden" name="semester" th:value="${semesterFilter}">
+                            <select name="trangThai" required>
+                                <option value="CHO_DUYET" th:selected="${rp.status == 'CHO_DUYET'}">CHO_DUYET</option>
+                                <option value="DANG_LAM" th:selected="${rp.status == 'DANG_LAM'}">DANG_LAM</option>
+                                <option value="HOAN_THANH" th:selected="${rp.status == 'HOAN_THANH'}">HOAN_THANH</option>
+                                <option value="HUY" th:selected="${rp.status == 'HUY'}">HUY</option>
+                            </select>
+                            <input name="ketQua" placeholder="Nhận xét / kết quả" th:value="${rp.result}">
+                            <button type="submit">Lưu</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -71,30 +86,8 @@
         </p>
     </section>
 
-    <!-- Form nhận xét / đổi trạng thái -->
-    <section class="card form">
-        <h3>Nhận xét / thay đổi trạng thái đề tài</h3>
-        <form th:action="@{/ui/lecturer/research-review}" method="post">
-            <div class="row">
-                <label>Mã SV
-                    <input name="maSv" placeholder="SV..." required>
-                </label>
-                <label>Mã kỳ
-                    <input name="maKy" placeholder="2025-1" required>
-                </label>
-                <label>Trạng thái
-                    <input name="trangThai" placeholder="CHO_DUYET/DANG_LAM/HOAN_THANH" required>
-                </label>
-            </div>
-            <label>Nhận xét / Kết quả
-                <input name="ketQua" placeholder="Ví dụ: Đạt, cần bổ sung chương 2...">
-            </label>
-            <input type="hidden" name="semester" th:value="${semesterFilter}">
-            <button type="submit">Lưu nhận xét</button>
-        </form>
-        <p class="msg" style="color:#22c55e" th:text="${reviewOk}"></p>
-        <p class="msg" style="color:#f97316" th:text="${reviewError}"></p>
-    </section>
+    <p class="msg" style="color:#22c55e" th:text="${reviewOk}"></p>
+    <p class="msg" style="color:#f97316" th:text="${reviewError}"></p>
 
 </main>
 </body>

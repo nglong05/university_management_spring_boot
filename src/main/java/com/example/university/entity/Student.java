@@ -18,6 +18,10 @@ public class Student {
     private String email;
     private String departmentID;
     private String majorID;
+
+    // Thông tin hiển thị
+    private String departmentName;
+    private String majorName;
 }
 
 //+---------------+-------------------+------+-----+---------+-------+
