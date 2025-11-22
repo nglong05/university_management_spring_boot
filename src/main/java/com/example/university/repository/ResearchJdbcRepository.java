@@ -26,6 +26,7 @@ public class ResearchJdbcRepository {
 
         return new ResearchProjectDTO(
                 rs.getString("ma_sv"),
+                rs.getString("ten_sv"),
                 rs.getString("ma_gv"),
                 rs.getString("ten_gv"),
                 rs.getString("ma_ky"),
@@ -43,6 +44,7 @@ public class ResearchJdbcRepository {
     public List<ResearchProjectDTO> findByStudent(String studentId, @Nullable String semesterId) {
         String base = """
                 SELECT nckh.ma_sv,
+                       sv.ho_ten      AS ten_sv,
                        nckh.ma_gv,
                        gv.ho_ten      AS ten_gv,
                        nckh.ma_ky,
@@ -54,6 +56,7 @@ public class ResearchJdbcRepository {
                        nckh.ket_qua,
                        nckh.file_dinh_kem
                 FROM nghien_cuu_khoa_hoc nckh
+                JOIN sinh_vien sv ON sv.ma_sv = nckh.ma_sv
                 JOIN giang_vien gv ON gv.ma_gv = nckh.ma_gv
                 JOIN ky_hoc kh ON kh.ma_ky = nckh.ma_ky
                 WHERE nckh.ma_sv = ?

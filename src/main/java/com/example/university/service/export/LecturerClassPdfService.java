@@ -1,6 +1,7 @@
 package com.example.university.service.export;
 
 import com.example.university.dto.ClassGradeDTO;
+import com.example.university.dto.ClassTranscriptItemDTO;
 import com.example.university.export.ClassTranscriptPdfExporter;
 import com.example.university.repository.LecturerJdbcRepository;
 import com.example.university.service.exception.ForbiddenException;
@@ -36,7 +37,7 @@ public class LecturerClassPdfService {
             throw new ForbiddenException("Giảng viên không được phân công môn/kỳ này.");
         }
 
-        List<ClassGradeDTO> rows = lecturerRepo.classTranscript(maMon, maKy);
+        List<ClassTranscriptItemDTO> rows = lecturerRepo.classTranscript(maMon, maKy);
 
         try {
             ClassTranscriptPdfExporter exporter = new ClassTranscriptPdfExporter();

@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS khoa;
 --     UNIVERSITY PARTS
 --  ====================================================================================
 
-CREATE TABLE khoa (
+CREATE TABLE IF NOT EXISTS khoa (
     ma_khoa       VARCHAR(50)  PRIMARY KEY,
     ten_khoa      VARCHAR(100) NOT NULL UNIQUE,
     email         VARCHAR(100) UNIQUE,
@@ -26,7 +26,7 @@ CREATE TABLE khoa (
     van_phong     VARCHAR(100)
 );
 
-CREATE TABLE nganh_hoc (
+CREATE TABLE IF NOT EXISTS nganh_hoc (
     ma_nganh_hoc  VARCHAR(50) PRIMARY KEY,
     ten_nganh_hoc VARCHAR(100) NOT NULL,
     ma_khoa       VARCHAR(50) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS giang_vien (
 --          BASIC M-M RELATIONSHIPS
 -- ========================================================================================
 
-CREATE TABLE giangvien_monhoc (
+CREATE TABLE IF NOT EXISTS giangvien_monhoc (
     ma_gv VARCHAR(50) NOT NULL,
     ma_mon VARCHAR(50) NOT NULL,
     ma_ky  VARCHAR(50) NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE giangvien_monhoc (
 --           KET QUA HOC TAP: 4 RELATIONSHIPS SINH VIEN - GIANG VIEN - MON HOC - KY HOC
 -- ===========================================================================================
 
-CREATE TABLE ket_qua_hoc_tap (
+CREATE TABLE IF NOT EXISTS ket_qua_hoc_tap (
     ma_sv  VARCHAR(50) NOT NULL,
     ma_mon VARCHAR(50) NOT NULL,
     ma_ky  VARCHAR(50) NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE ket_qua_hoc_tap (
 --         NGHIEN CUU KHOA HOC: 3 RELATIONSHIPS KY HOC - SINH VIEN - GIANG VIEN
 -- ====================================================================================
 
-CREATE TABLE nghien_cuu_khoa_hoc (
+CREATE TABLE IF NOT EXISTS nghien_cuu_khoa_hoc (
     ma_sv VARCHAR(50) NOT NULL,
     ma_gv VARCHAR(50) NOT NULL,
     ma_ky VARCHAR(50) NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE nghien_cuu_khoa_hoc (
 --                 BUSSINES LOGICS
 -- ====================================================================================
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     username       VARCHAR(50) PRIMARY KEY,
     password_hash  VARCHAR(500) NOT NULL,
     role           ENUM('STUDENT','LECTURER','ADMIN') NOT NULL,

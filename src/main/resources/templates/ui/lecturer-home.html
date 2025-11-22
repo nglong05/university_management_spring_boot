@@ -51,7 +51,6 @@
     <p class="msg" style="color:#22c55e" th:text="${gradeOk}"></p>
     <p class="msg" style="color:#f97316" th:text="${gradeError}"></p>
     <p class="hint">
-      Lưu ý: chỉ ghi được điểm nếu bạn được phân công vào môn/kỳ đó
       (bảng <code>giangvien_monhoc</code>).
     </p>
   </section>
@@ -131,6 +130,92 @@
     <p th:if="${classTranscript == null or #lists.size(classTranscript) == 0}">
       Chưa có sinh viên / chưa có điểm cho lớp này.
     </p>
+  </section>
+  <section class="card form">
+    <h3>Xuất PDF bảng điểm lớp</h3>
+    <form th:action="@{/ui/lecturer/class-pdf}" method="get">
+      <div class="row">
+        <label>Mã môn
+          <input name="maMon" placeholder="CT101" required>
+        </label>
+        <label>Mã kỳ
+          <input name="maKy" placeholder="2024-1" required>
+        </label>
+      </div>
+      <button type="submit">Tải PDF</button>
+    </form>
+  </section>
+  <!-- Lọc & danh sách đề tài NCKH -->
+  <section class="card">
+    <h3>Đề tài NCKH sinh viên hướng dẫn</h3>
+
+    <form th:action="@{/ui/lecturer/home}" method="get" class="form">
+      <label>Kỳ học (vd: 2025-1, để trống = tất cả)
+        <input type="text" name="semester" th:value="${semesterFilter}">
+      </label>
+      <button type="submit">Lọc</button>
+    </form>
+
+    <p class="msg" style="color:#f97316" th:text="${researchError}"></p>
+
+    <div class="table-wrap"
+         th:if="${researchList != null and #lists.size(researchList) > 0}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Sinh viên</th>
+          <th>Mã SV</th>
+          <th>Kỳ</th>
+          <th>Tên đề tài</th>
+          <th>Mô tả</th>
+          <th>Trạng thái</th>
+          <th>Kết quả / Nhận xét</th>
+          <th>Ngày ĐK</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rp : ${researchList}">
+          <td th:text="${rp.studentName}">Nguyễn Văn A</td>
+          <td th:text="${rp.studentId}">SV001</td>
+          <td th:text="${rp.semesterId}">2025-1</td>
+          <td th:text="${rp.topicTitle}">Đề tài</td>
+          <td th:text="${rp.description}">Mô tả</td>
+          <td th:text="${rp.status}">PENDING</td>
+          <td th:text="${rp.result}">Nhận xét</td>
+          <td th:text="${#temporals.format(rp.registeredAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p th:if="${researchList == null or #lists.size(researchList) == 0}">
+      Chưa có đề tài nào được đăng ký với bạn.
+    </p>
+  </section>
+
+  <!-- Form nhận xét / đổi trạng thái -->
+  <section class="card form">
+    <h3>Nhận xét / thay đổi trạng thái đề tài</h3>
+    <form th:action="@{/ui/lecturer/research-review}" method="post">
+      <div class="row">
+        <label>Mã SV
+          <input name="maSv" placeholder="SV..." required>
+        </label>
+        <label>Mã kỳ
+          <input name="maKy" placeholder="2025-1" required>
+        </label>
+        <label>Trạng thái
+          <input name="trangThai" placeholder="PENDING/APPROVED/REJECTED" required>
+        </label>
+      </div>
+      <label>Nhận xét / Kết quả
+        <input name="ketQua" placeholder="Ví dụ: Đạt, cần bổ sung chương 2...">
+      </label>
+      <input type="hidden" name="semester" th:value="${semesterFilter}">
+      <button type="submit">Lưu nhận xét</button>
+    </form>
+    <p class="msg" style="color:#22c55e" th:text="${reviewOk}"></p>
+    <p class="msg" style="color:#f97316" th:text="${reviewError}"></p>
   </section>
 
 </main>

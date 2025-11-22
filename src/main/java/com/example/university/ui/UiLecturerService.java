@@ -1,8 +1,6 @@
 package com.example.university.ui;
 
-import com.example.university.dto.ClassTranscriptItemDTO;
-import com.example.university.dto.LecturerCourseDTO;
-import com.example.university.dto.UpdateGradeRequest;
+import com.example.university.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -74,6 +72,53 @@ public class UiLecturerService {
         }
 
         return resp.getBody();
+    }
+    public byte[] downloadClassPdf(UiSession s, String maMon, String maKy) {
+        HttpHeaders h = authHeaders(s);
+        h.setAccept(List.of(MediaType.APPLICATION_PDF));
+        HttpEntity<Void> entity = new HttpEntity<>(h);
+
+        ResponseEntity<byte[]> resp = restTemplate.exchange(
+                "/api/lecturers/me/classes/{courseId}/semesters/{semesterId}/pdf",
+                HttpMethod.GET,
+                entity,
+                byte[].class,
+                maMon,
+                maKy
+        );
+        if (!resp.getStatusCode().is2xxSuccessful() || resp.getBody() == null) {
+            throw new RuntimeException("Không tải được PDF lớp học");
+        }
+        return resp.getBody();
+    }
+    public List<ResearchProjectDTO> getMyResearchProjects(UiSession s, String semester) {
+        HttpEntity<Void> entity = new HttpEntity<>(authHeaders(s));
+
+        String url = "/api/lecturers/me/research-projects";
+        if (semester != null && !semester.isBlank()) {
+            url += "?semester=" + semester;
+        }
+
+        ResponseEntity<List<ResearchProjectDTO>> resp = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<List<ResearchProjectDTO>>() {}
+        );
+        return resp.getBody();
+    }
+    public void reviewResearch(UiSession s, UpdateResearchReviewRequest req) {
+        HttpEntity<UpdateResearchReviewRequest> entity = new HttpEntity<>(req, authHeaders(s));
+
+        ResponseEntity<String> resp = restTemplate.exchange(
+                "/api/lecturers/me/research-projects/review",
+                HttpMethod.PUT,
+                entity,
+                String.class
+        );
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không cập nhật được trạng thái đề tài");
+        }
     }
 
 }

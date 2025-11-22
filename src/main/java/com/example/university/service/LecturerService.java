@@ -1,13 +1,12 @@
 package com.example.university.service;
 
-import com.example.university.dto.ClassTranscriptItemDTO;
-import com.example.university.dto.LecturerCourseDTO;
-import com.example.university.dto.UpdateGradeRequest;
+import com.example.university.dto.*;
 import com.example.university.repository.LecturerJdbcRepository;
 import com.example.university.repository.StudentJdbcRepository;
 import com.example.university.service.exception.ForbiddenException;
 import com.example.university.service.exception.NotFoundException;
 import com.example.university.service.exception.ValidationException;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,4 +123,81 @@ public class LecturerService {
         req.setDiemGk(normScore(req.getDiemGk(), "Điểm giữa kỳ"));
         req.setDiemCk(normScore(req.getDiemCk(), "Điểm cuối kỳ"));
     }
+    /**
+     * Giảng viên xem danh sách đề tài NCKH của sinh viên đăng ký với mình.
+     * Có thể filter theo semester (ma_ky) và status (trang_thai).
+     */
+    @Transactional
+    public List<ResearchProjectDTO> listMyResearchProjects(
+            String lecturerId,
+            @Nullable String semester
+    ) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+
+        String sem = null;
+        if (semester != null && !semester.isBlank()) {
+            sem = normSemester(semester);
+        }
+
+
+        return lecturerRepo.listResearchByLecturer(gvId, sem);
+    }
+
+    @Transactional
+    public void reviewResearch(String lecturerId, UpdateResearchReviewRequest req) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+
+        req.setMaSv(normRequired(req.getMaSv(), "Mã sinh viên").toUpperCase());
+        req.setMaKy(normSemester(req.getMaKy()));
+        req.setTrangThai(normRequired(req.getTrangThai(), "Trạng thái đề tài"));
+        if (req.getKetQua() != null) {
+            req.setKetQua(req.getKetQua().trim());
+        }
+
+        int affected = lecturerRepo.updateResearchReview(gvId, req);
+        if (affected == 0) {
+            throw new NotFoundException("Không tìm thấy đề tài tương ứng hoặc không thuộc quyền của giảng viên.");
+        }
+    }
+
+    /**
+     * Giảng viên cập nhật trạng thái & nhận xét/ketQua cho 1 đề tài NCKH.
+     */
+    @Transactional
+    public void updateResearchStatus(String lecturerId, UpdateResearchStatusRequest req) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        if (req == null) {
+            throw new ValidationException("Request không được null");
+        }
+
+        String maSv = normRequired(req.getMaSv(), "Mã sinh viên");
+        String maKy = normRequired(req.getMaKy(), "Mã kỳ học");
+        maKy = normSemester(maKy);
+
+        String status = normRequired(req.getTrangThai(), "Trạng thái đề tài");
+        if (status.length() > 100) {
+            throw new ValidationException("Trạng thái quá dài (tối đa 100 ký tự)");
+        }
+
+        String ketQua = req.getKetQua();
+        if (ketQua != null) {
+            ketQua = ketQua.trim();
+            if (ketQua.isEmpty()) {
+                ketQua = null;
+            } else if (ketQua.length() > 100) { // khớp với VARCHAR(100) của cột ket_qua
+                throw new ValidationException("Nhận xét/kết quả quá dài (tối đa 100 ký tự)");
+            }
+        }
+
+        int affected = lecturerRepo.updateResearchStatus(gvId, maSv, maKy, status, ketQua);
+        if (affected == 0) {
+            // Hoặc là không có đề tài đó, hoặc không phải đề tài của giảng viên này
+            throw new NotFoundException("Không tìm thấy đề tài nghiên cứu của sinh viên/kỳ này hoặc bạn không phải người hướng dẫn.");
+        }
+    }
+    private static String normSemesterAllowNull(@Nullable String semester) {
+        if (semester == null || semester.isBlank()) return null;
+        return normSemester(semester);
+    }
+
 }

@@ -1,12 +1,9 @@
 package com.example.university.ui;
 
-import com.example.university.dto.GpaDTO;
-import com.example.university.dto.TranscriptItemDTO;
-import com.example.university.dto.UpdateGradeRequest;
+import com.example.university.dto.*;
 import com.example.university.entity.Student;
-import com.example.university.dto.ResearchProjectDTO;
-import com.example.university.dto.ResearchRegistrationRequest;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -158,45 +158,6 @@ public class UiController {
     }
 
     // ================== LECTURER UI ==================
-    @GetMapping("/lecturer/home")
-    public String lecturerHome(
-            @RequestParam(value = "courseId", required = false) String courseId,
-            @RequestParam(value = "semesterId", required = false) String semesterId,
-            HttpSession session,
-            Model model
-    ) {
-        UiSession ui = requireLogin(session);
-        if (!ui.isLecturer()) {
-            return "redirect:/ui/login";
-        }
-
-        model.addAttribute("session", ui);
-        model.addAttribute("gradeError", null);
-        model.addAttribute("gradeOk", null);
-
-        // Danh sách môn được phân công
-        try {
-            var courses = lecturerService.myCourses(ui);
-            model.addAttribute("courses", courses);
-        } catch (Exception e) {
-            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
-        }
-
-        // Nếu có chọn môn + kỳ => load danh sách sinh viên
-        if (courseId != null && !courseId.isBlank()
-            && semesterId != null && !semesterId.isBlank()) {
-            try {
-                var classTranscript = lecturerService.classTranscript(ui, courseId, semesterId);
-                model.addAttribute("classTranscript", classTranscript);
-                model.addAttribute("selectedCourseId", courseId);
-                model.addAttribute("selectedSemesterId", semesterId);
-            } catch (Exception e) {
-                model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
-            }
-        }
-
-        return "ui/lecturer-home";
-    }
 
     @PostMapping("/lecturer/grade")
     public String submitGrade(
@@ -297,4 +258,133 @@ public class UiController {
         }
         return s;
     }
+    @GetMapping("/lecturer/class-pdf")
+    public void downloadClassPdf(
+            @RequestParam String maMon,
+            @RequestParam String maKy,
+            HttpSession session,
+            HttpServletResponse response
+    ) throws IOException {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            response.sendRedirect("/ui/login");
+            return;
+        }
+
+        byte[] pdf = lecturerService.downloadClassPdf(ui, maMon, maKy);
+
+        String fileName = URLEncoder.encode(
+                "bang_diem_" + maMon + "_" + maKy + ".pdf",
+                StandardCharsets.UTF_8
+        );
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + fileName);
+        response.getOutputStream().write(pdf);
+    }
+    @GetMapping("/lecturer/home")
+    public String lecturerHome(
+            @RequestParam(required = false) String courseId,
+            @RequestParam(required = false) String semesterId,
+            @RequestParam(required = false, name = "researchSemester") String researchSemester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            return "redirect:/ui/login";
+        }
+
+        model.addAttribute("session", ui);
+        model.addAttribute("gradeError", null);
+        model.addAttribute("gradeOk", null);
+
+    /* ==========================
+       1) LOAD CÁC MÔN ĐƯỢC PHÂN CÔNG
+       ========================== */
+        try {
+            var courses = lecturerService.myCourses(ui);
+            model.addAttribute("courses", courses);
+        } catch (Exception e) {
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+        }
+
+    /* ==========================
+       2) LOAD BẢNG ĐIỂM LỚP (NẾU CHỌN)
+       ========================== */
+        if (courseId != null && !courseId.isBlank()
+                && semesterId != null && !semesterId.isBlank()) {
+            try {
+                var classTranscript = lecturerService.classTranscript(ui, courseId, semesterId);
+                model.addAttribute("classTranscript", classTranscript);
+                model.addAttribute("selectedCourseId", courseId);
+                model.addAttribute("selectedSemesterId", semesterId);
+            } catch (Exception e) {
+                model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+            }
+        }
+
+    /* ==========================
+       3) LOAD ĐỀ TÀI NCKH SINH VIÊN HƯỚNG DẪN
+       ========================== */
+        try {
+            var researchList = lecturerService.getMyResearchProjects(ui, researchSemester);
+            model.addAttribute("researchList", researchList);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không tải được danh sách đề tài NCKH: " + e.getMessage());
+        }
+
+        model.addAttribute("semesterFilter", researchSemester == null ? "" : researchSemester);
+        model.addAttribute("reviewOk", null);
+        model.addAttribute("reviewError", null);
+
+        return "ui/lecturer-home";
+    }
+
+
+    @PostMapping("/lecturer/research-review")
+    public String submitResearchReview(
+            @RequestParam String maSv,
+            @RequestParam String maKy,
+            @RequestParam String trangThai,
+            @RequestParam(required = false) String ketQua,
+            @RequestParam(required = false, name = "semester") String filterSemester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            return "redirect:/ui/login";
+        }
+
+        UpdateResearchReviewRequest req = new UpdateResearchReviewRequest();
+        req.setMaSv(maSv);
+        req.setMaKy(maKy);
+        req.setTrangThai(trangThai);
+        req.setKetQua(ketQua);
+
+        try {
+            lecturerService.reviewResearch(ui, req);
+            model.addAttribute("reviewOk", "Đã cập nhật đề tài.");
+            model.addAttribute("reviewError", null);
+        } catch (Exception e) {
+            model.addAttribute("reviewError", "Không cập nhật được đề tài: " + e.getMessage());
+            model.addAttribute("reviewOk", null);
+        }
+
+        model.addAttribute("session", ui);
+        model.addAttribute("gradeError", null);
+        model.addAttribute("gradeOk", null);
+
+        // load lại danh sách
+        try {
+            List<ResearchProjectDTO> research = lecturerService.getMyResearchProjects(ui, filterSemester);
+            model.addAttribute("researchList", research);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+        }
+
+        model.addAttribute("semesterFilter", filterSemester == null ? "" : filterSemester);
+        return "ui/lecturer-home";
+    }
+
 }
