@@ -30,6 +30,8 @@
           <input name="semester"
                  th:value="${semesterFilter}"
                  placeholder="VD: 2025-1 (để trống = tất cả)"
+                 pattern="\d{4}-[12]"
+                 title="Định dạng kỳ: yyyy-1 hoặc yyyy-2"
                  style="width:100%; max-width:240px; padding:10px 12px; border-radius:8px;">
         </label>
       </div>

@@ -30,6 +30,8 @@
             <label>Kỳ học (vd: 2025-1, để trống = tất cả)
                 <input type="text" name="semester" th:value="${semesterFilter}"
                        placeholder="VD: 2025-1"
+                       pattern="\d{4}-[12]"
+                       title="Định dạng kỳ: yyyy-1 hoặc yyyy-2"
                        style="width:100%; max-width:200px; padding:10px 12px; border-radius:8px;">
             </label>
             <button type="submit">Lọc</button>
@@ -39,10 +41,14 @@
             <div class="row" style="gap:10px; align-items:flex-end;">
                 <label style="flex:1 1 140px;">Mã SV
                     <input name="maSv" placeholder="VD: B23DCTT019" required
+                           pattern="[A-Za-z0-9]{10}"
+                           title="Mã sinh viên gồm 10 ký tự chữ hoặc số"
                            style="width:100%; padding:10px 12px; border-radius:8px;">
                 </label>
                 <label style="flex:1 1 140px;">Kỳ học
                     <input name="maKy" placeholder="2025-1" required
+                           pattern="\d{4}-[12]"
+                           title="Định dạng kỳ: yyyy-1 hoặc yyyy-2"
                            style="width:100%; padding:10px 12px; border-radius:8px;">
                 </label>
             </div>

@@ -43,6 +43,8 @@
           <input name="maSv"
                  placeholder="VD: B23DCTT019"
                  required
+                 pattern="[A-Za-z0-9]{10}"
+                 title="Mã sinh viên gồm 10 ký tự chữ hoặc số"
                  style="width:100%; padding:10px 12px; border-radius:8px;">
         </label>
         <input type="hidden" name="maMon" th:value="${selectedCourseId}">

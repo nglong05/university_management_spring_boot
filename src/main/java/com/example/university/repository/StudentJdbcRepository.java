@@ -31,7 +31,12 @@ public class StudentJdbcRepository {
         s.setAddress(rs.getString("dia_chi"));
         s.setPhone(rs.getString("so_dien_thoai"));
         s.setEmail(rs.getString("email"));
-        s.setDepartmentID(rs.getString("ma_khoa"));
+        // Lấy khoa thông qua ngành (dept_id alias) hoặc fallback ma_khoa nếu còn tồn tại
+        if (hasColumn(rs, "dept_id")) {
+            s.setDepartmentID(rs.getString("dept_id"));
+        } else if (hasColumn(rs, "ma_khoa")) {
+            s.setDepartmentID(rs.getString("ma_khoa"));
+        }
         s.setMajorID(rs.getString("ma_nganh_hoc"));
         if (hasColumn(rs, "ten_khoa")) {
             s.setDepartmentName(rs.getString("ten_khoa"));
@@ -47,11 +52,12 @@ public class StudentJdbcRepository {
     public Optional<Student> findById(String id) throws SQLException {
         String sql = """
         SELECT sv.*,
+               ng.ma_khoa AS dept_id,
                k.ten_khoa,
                ng.ten_nganh_hoc
         FROM sinh_vien sv
-        LEFT JOIN khoa k ON k.ma_khoa = sv.ma_khoa
         LEFT JOIN nganh_hoc ng ON ng.ma_nganh_hoc = sv.ma_nganh_hoc
+        LEFT JOIN khoa k ON k.ma_khoa = ng.ma_khoa
         WHERE sv.ma_sv = ?
         """;
         try (

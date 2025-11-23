@@ -310,7 +310,7 @@ public class UiController {
             model.addAttribute("gradeOk", "Đã thêm sinh viên vào lớp.");
             model.addAttribute("gradeError", null);
         } catch (Exception e) {
-            model.addAttribute("gradeError", e.getMessage());
+            model.addAttribute("gradeError", friendlyError(e));
             model.addAttribute("gradeOk", null);
         }
 
@@ -319,7 +319,7 @@ public class UiController {
             var courses = lecturerService.myCourses(ui);
             model.addAttribute("courses", courses);
         } catch (Exception e) {
-            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + friendlyError(e));
         }
 
         try {
@@ -331,7 +331,7 @@ public class UiController {
                 model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
             }
         } catch (Exception e) {
-            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + friendlyError(e));
         }
 
         return "ui/lecturer-home";
@@ -353,7 +353,7 @@ public class UiController {
             model.addAttribute("gradeOk", "Đã xóa sinh viên khỏi lớp.");
             model.addAttribute("gradeError", null);
         } catch (Exception e) {
-            model.addAttribute("gradeError", e.getMessage());
+            model.addAttribute("gradeError", friendlyError(e));
             model.addAttribute("gradeOk", null);
         }
 
@@ -362,7 +362,7 @@ public class UiController {
             var courses = lecturerService.myCourses(ui);
             model.addAttribute("courses", courses);
         } catch (Exception e) {
-            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + friendlyError(e));
         }
 
         try {
@@ -374,7 +374,7 @@ public class UiController {
                 model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
             }
         } catch (Exception e) {
-            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + friendlyError(e));
         }
 
         return "ui/lecturer-home";
@@ -408,7 +408,7 @@ public class UiController {
             model.addAttribute("reviewOk", "Đã cập nhật đề tài.");
             model.addAttribute("reviewError", null);
         } catch (Exception e) {
-            model.addAttribute("reviewError", "Không cập nhật được đề tài: " + e.getMessage());
+            model.addAttribute("reviewError", "Không cập nhật được đề tài: " + friendlyError(e));
             model.addAttribute("reviewOk", null);
         }
 
@@ -419,7 +419,7 @@ public class UiController {
             java.util.List<ResearchProjectDTO> research = lecturerService.getMyResearchProjects(ui, filterSemester);
             model.addAttribute("researchList", research);
         } catch (Exception e) {
-            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + friendlyError(e));
         }
 
         model.addAttribute("semesterFilter", filterSemester == null ? "" : filterSemester);
@@ -445,7 +445,7 @@ public class UiController {
             model.addAttribute("reviewOk", "Đã thêm đề tài mới.");
             model.addAttribute("reviewError", null);
         } catch (Exception e) {
-            model.addAttribute("reviewError", e.getMessage());
+            model.addAttribute("reviewError", friendlyError(e));
             model.addAttribute("reviewOk", null);
         }
 
@@ -455,7 +455,7 @@ public class UiController {
                     lecturerService.getMyResearchProjects(ui, null);
             model.addAttribute("researchList", research);
         } catch (Exception e) {
-            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + friendlyError(e));
         }
         model.addAttribute("semesterFilter", "");
         return "ui/lecturer-research";
@@ -478,7 +478,7 @@ public class UiController {
             model.addAttribute("reviewOk", "Đã xóa đề tài.");
             model.addAttribute("reviewError", null);
         } catch (Exception e) {
-            model.addAttribute("reviewError", e.getMessage());
+            model.addAttribute("reviewError", friendlyError(e));
             model.addAttribute("reviewOk", null);
         }
 
@@ -488,7 +488,7 @@ public class UiController {
                     lecturerService.getMyResearchProjects(ui, filterSemester);
             model.addAttribute("researchList", research);
         } catch (Exception e) {
-            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + friendlyError(e));
         }
         model.addAttribute("semesterFilter", filterSemester == null ? "" : filterSemester);
         return "ui/lecturer-research";
@@ -514,11 +514,16 @@ public class UiController {
             var researchList = lecturerService.getMyResearchProjects(ui, researchSemester);
             model.addAttribute("researchList", researchList);
         } catch (Exception e) {
-            model.addAttribute("researchError", "Không tải được danh sách đề tài NCKH: " + e.getMessage());
+            model.addAttribute("researchError", "Không tải được danh sách đề tài NCKH: " + friendlyError(e));
         }
 
         model.addAttribute("semesterFilter", researchSemester == null ? "" : researchSemester);
         return "ui/lecturer-research";
+    }
+
+    private String friendlyError(Exception e) {
+        String msg = e.getMessage();
+        return (msg == null || msg.isBlank()) ? "Có lỗi xảy ra, vui lòng thử lại." : msg;
     }
 
 
