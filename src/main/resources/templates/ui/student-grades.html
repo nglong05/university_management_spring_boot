@@ -27,7 +27,10 @@
     <form class="form" method="get">
       <div class="row">
         <label>Kỳ học
-          <input name="semester" th:value="${semesterFilter}">
+          <input name="semester"
+                 th:value="${semesterFilter}"
+                 placeholder="VD: 2025-1 (để trống = tất cả)"
+                 style="width:100%; max-width:240px; padding:10px 12px; border-radius:8px;">
         </label>
       </div>
       <div class="row mt-1">

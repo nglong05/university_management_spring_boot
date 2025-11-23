@@ -123,6 +123,27 @@ public class UiLecturerService {
         );
         return resp.getBody();
     }
+    public void addStudentToClass(UiSession s, String courseId, String semesterId, String studentId) {
+        HttpEntity<java.util.Map<String, String>> entity = new HttpEntity<>(
+                java.util.Map.of("maSv", studentId),
+                authHeaders(s)
+        );
+        String url = String.format("/api/lecturers/me/courses/%s/semesters/%s/students", courseId, semesterId);
+        ResponseEntity<String> resp = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không thêm được sinh viên vào lớp");
+        }
+    }
+
+    public void removeStudentFromClass(UiSession s, String courseId, String semesterId, String studentId) {
+        HttpEntity<Void> entity = new HttpEntity<>(authHeaders(s));
+        String url = String.format("/api/lecturers/me/courses/%s/semesters/%s/students/%s",
+                courseId, semesterId, studentId);
+        ResponseEntity<String> resp = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không xóa được sinh viên khỏi lớp");
+        }
+    }
     public void reviewResearch(UiSession s, UpdateResearchReviewRequest req) {
         HttpEntity<UpdateResearchReviewRequest> entity = new HttpEntity<>(req, authHeaders(s));
 

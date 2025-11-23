@@ -93,6 +93,45 @@ public class LecturerService {
         return lecturerRepo.classTranscript(maMon, maKy);
     }
 
+    @Transactional
+    public void addStudentToClass(String lecturerId, String studentId, String courseId, String semesterId) throws SQLException {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        String maSv = normRequired(studentId, "Mã sinh viên").toUpperCase();
+        String maMon = normRequired(courseId, "Mã môn").toUpperCase();
+        String maKy = normSemester(semesterId);
+
+        // validate student exists
+        if (studentRepo.findById(maSv).isEmpty()) {
+            throw new NotFoundException("Không tìm thấy sinh viên: " + maSv);
+        }
+        // permission
+        if (!lecturerRepo.canGrade(gvId, maMon, maKy)) {
+            throw new ForbiddenException("Giảng viên không được phân công môn/kỳ này.");
+        }
+
+        int affected = lecturerRepo.insertStudentToClass(maSv, maMon, maKy, gvId);
+        if (affected <= 0) {
+            throw new ValidationException("Không thể thêm sinh viên vào lớp.");
+        }
+    }
+
+    @Transactional
+    public void removeStudentFromClass(String lecturerId, String studentId, String courseId, String semesterId) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        String maSv = normRequired(studentId, "Mã sinh viên").toUpperCase();
+        String maMon = normRequired(courseId, "Mã môn").toUpperCase();
+        String maKy = normSemester(semesterId);
+
+        if (!lecturerRepo.canGrade(gvId, maMon, maKy)) {
+            throw new ForbiddenException("Giảng viên không được phân công môn/kỳ này.");
+        }
+
+        int affected = lecturerRepo.deleteStudentFromClass(maSv, maMon, maKy, gvId);
+        if (affected == 0) {
+            throw new NotFoundException("Không tìm thấy bản ghi điểm để xóa.");
+        }
+    }
+
     // --------------------- PRIVATE HELPERS ---------------------
 
     private static String normRequired(String s, String field) {

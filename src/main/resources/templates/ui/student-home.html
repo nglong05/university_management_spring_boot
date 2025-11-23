@@ -41,7 +41,10 @@
             <form th:action="@{/ui/student/home}" method="get" class="form">
                 <label>
                     Kỳ học (vd: 2025-1, để trống = tích lũy)
-                    <input type="text" name="semester" th:value="${semesterFilter}">
+                    <input type="text" name="semester"
+                           th:value="${semesterFilter}"
+                           placeholder="VD: 2025-1"
+                           style="width:100%; max-width:240px; padding:10px 12px; border-radius:8px;">
                 </label>
 
                 <div class="row" style="margin-top: 8px;">

@@ -167,6 +167,47 @@ public class LecturerJdbcRepository {
 
         return list;
     }
+
+    public int insertStudentToClass(String studentId,
+                                    String courseId,
+                                    String semesterId,
+                                    String lecturerId) {
+        String sql = """
+            INSERT INTO ket_qua_hoc_tap (ma_sv, ma_mon, ma_ky, ma_gv, diem_qt, diem_gk, diem_ck)
+            VALUES (?,?,?,?,0,0,0)
+            """;
+        try (
+                Connection con = dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, studentId);
+            ps.setString(2, courseId);
+            ps.setString(3, semesterId);
+            ps.setString(4, lecturerId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("insertStudentToClass(" + studentId + "," + courseId + "," + semesterId + ")", e);
+        }
+    }
+
+    public int deleteStudentFromClass(String studentId, String courseId, String semesterId, String lecturerId) {
+        String sql = """
+            DELETE FROM ket_qua_hoc_tap
+            WHERE ma_sv = ? AND ma_mon = ? AND ma_ky = ? AND ma_gv = ?
+            """;
+        try (
+                Connection con = dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, studentId);
+            ps.setString(2, courseId);
+            ps.setString(3, semesterId);
+            ps.setString(4, lecturerId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("deleteStudentFromClass(" + studentId + "," + courseId + "," + semesterId + ")", e);
+        }
+    }
     // Danh sách NCKH của SV do 1 giảng viên hướng dẫn (lọc theo kỳ nếu có)
     public List<ResearchProjectDTO> listResearchByLecturer(String lecturerId,
                                                            @Nullable String semesterId) {

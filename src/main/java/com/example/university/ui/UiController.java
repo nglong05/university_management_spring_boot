@@ -294,6 +294,91 @@ public class UiController {
 
         return "ui/lecturer-home";   // giờ chỉ là trang chấm điểm
     }
+    @PostMapping("/lecturer/class/add-student")
+    public String addStudentToClass(
+            @RequestParam String maSv,
+            @RequestParam String maMon,
+            @RequestParam String maKy,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) return "redirect:/ui/login";
+
+        try {
+            lecturerService.addStudentToClass(ui, maMon, maKy, maSv);
+            model.addAttribute("gradeOk", "Đã thêm sinh viên vào lớp.");
+            model.addAttribute("gradeError", null);
+        } catch (Exception e) {
+            model.addAttribute("gradeError", e.getMessage());
+            model.addAttribute("gradeOk", null);
+        }
+
+        model.addAttribute("session", ui);
+        try {
+            var courses = lecturerService.myCourses(ui);
+            model.addAttribute("courses", courses);
+        } catch (Exception e) {
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+        }
+
+        try {
+            var classTranscript = lecturerService.classTranscript(ui, maMon, maKy);
+            model.addAttribute("classTranscript", classTranscript);
+            model.addAttribute("selectedCourseId", maMon);
+            model.addAttribute("selectedSemesterId", maKy);
+            if (classTranscript != null && !classTranscript.isEmpty()) {
+                model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
+            }
+        } catch (Exception e) {
+            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+        }
+
+        return "ui/lecturer-home";
+    }
+
+    @PostMapping("/lecturer/class/remove-student")
+    public String removeStudentFromClass(
+            @RequestParam String maSv,
+            @RequestParam String maMon,
+            @RequestParam String maKy,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) return "redirect:/ui/login";
+
+        try {
+            lecturerService.removeStudentFromClass(ui, maMon, maKy, maSv);
+            model.addAttribute("gradeOk", "Đã xóa sinh viên khỏi lớp.");
+            model.addAttribute("gradeError", null);
+        } catch (Exception e) {
+            model.addAttribute("gradeError", e.getMessage());
+            model.addAttribute("gradeOk", null);
+        }
+
+        model.addAttribute("session", ui);
+        try {
+            var courses = lecturerService.myCourses(ui);
+            model.addAttribute("courses", courses);
+        } catch (Exception e) {
+            model.addAttribute("coursesError", "Không tải được danh sách môn: " + e.getMessage());
+        }
+
+        try {
+            var classTranscript = lecturerService.classTranscript(ui, maMon, maKy);
+            model.addAttribute("classTranscript", classTranscript);
+            model.addAttribute("selectedCourseId", maMon);
+            model.addAttribute("selectedSemesterId", maKy);
+            if (classTranscript != null && !classTranscript.isEmpty()) {
+                model.addAttribute("selectedCourseName", classTranscript.get(0).courseName());
+            }
+        } catch (Exception e) {
+            model.addAttribute("classTranscriptError", "Không tải được danh sách sinh viên: " + e.getMessage());
+        }
+
+        return "ui/lecturer-home";
+    }
 
 
 

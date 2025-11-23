@@ -59,6 +59,30 @@ public class LecturerController {
     ) {
         return service.getClassTranscript(me.getLecturerId(), courseId, semesterId);
     }
+    @PostMapping("/me/courses/{courseId}/semesters/{semesterId}/students")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<?> addStudentToClass(
+            @AuthenticationPrincipal AuthUser me,
+            @PathVariable String courseId,
+            @PathVariable String semesterId,
+            @RequestBody java.util.Map<String, String> body
+    ) throws SQLException {
+        String maSv = body.get("maSv");
+        service.addStudentToClass(me.getLecturerId(), maSv, courseId, semesterId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/me/courses/{courseId}/semesters/{semesterId}/students/{studentId}")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<?> removeStudentFromClass(
+            @AuthenticationPrincipal AuthUser me,
+            @PathVariable String courseId,
+            @PathVariable String semesterId,
+            @PathVariable String studentId
+    ) {
+        service.removeStudentFromClass(me.getLecturerId(), studentId, courseId, semesterId);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/me/classes/{courseId}/semesters/{semesterId}/pdf")
     @PreAuthorize("hasRole('LECTURER')")
     public void exportMyClassPdf(
