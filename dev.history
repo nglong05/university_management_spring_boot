@@ -57,5 +57,5 @@ doing the gui for the researches
 
 fix numerous gui for both student and lecturer
 implement pdf export
-TODO: input validation
+TODO: input validation, fall back
 TODO: implement docker

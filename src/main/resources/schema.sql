@@ -176,3 +176,43 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT fk_acc_gv FOREIGN KEY (ma_gv) REFERENCES giang_vien(ma_gv)
     ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+-- ====================================================================================
+--                                     VIEWS
+-- ====================================================================================
+
+-- Bảng điểm chi tiết cho sinh viên (JOIN môn học để lấy tên/TC)
+CREATE OR REPLACE VIEW v_bang_diem_sinh_vien AS
+SELECT
+    kq.ma_sv,
+    kq.ma_mon,
+    mh.ten_mon,
+    mh.so_tin_chi,
+    kq.ma_ky,
+    kq.diem_qt,
+    kq.diem_gk,
+    kq.diem_ck,
+    kq.diem_tong_ket
+FROM ket_qua_hoc_tap kq
+JOIN mon_hoc mh ON mh.ma_mon = kq.ma_mon;
+
+-- GPA theo từng kỳ
+CREATE OR REPLACE VIEW v_gpa_tung_ky AS
+SELECT
+    kq.ma_sv,
+    kq.ma_ky,
+    ROUND(SUM(kq.diem_tong_ket * mh.so_tin_chi) / NULLIF(SUM(mh.so_tin_chi), 0), 2) AS gpa10,
+    ROUND((SUM(kq.diem_tong_ket * mh.so_tin_chi) / NULLIF(SUM(mh.so_tin_chi), 0)) / 2.5, 2) AS gpa4
+FROM ket_qua_hoc_tap kq
+JOIN mon_hoc mh ON mh.ma_mon = kq.ma_mon
+GROUP BY kq.ma_sv, kq.ma_ky;
+
+-- GPA tích lũy toàn khóa
+CREATE OR REPLACE VIEW v_gpa_tich_luy AS
+SELECT
+    kq.ma_sv,
+    ROUND(SUM(kq.diem_tong_ket * mh.so_tin_chi) / NULLIF(SUM(mh.so_tin_chi), 0), 2) AS gpa10,
+    ROUND((SUM(kq.diem_tong_ket * mh.so_tin_chi) / NULLIF(SUM(mh.so_tin_chi), 0)) / 2.5, 2) AS gpa4
+FROM ket_qua_hoc_tap kq
+JOIN mon_hoc mh ON mh.ma_mon = kq.ma_mon
+GROUP BY kq.ma_sv;

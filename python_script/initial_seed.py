@@ -1,14 +1,29 @@
+import os
+import time
 import requests
 import csv
 import random
 
-BASE_URL = "http://localhost:8080"
-ADMIN = {"username": "admin", "password": "admin"}
+BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8080")
+ADMIN = {
+    "username": os.getenv("ADMIN_USER", "admin"),
+    "password": os.getenv("ADMIN_PASS", "admin"),
+}
 
 def get_token():
-    r = requests.post(BASE_URL + "/api/auth/login", json=ADMIN)
-    token = r.json().get("accessToken")
-    return token
+    backoff = 2
+    for attempt in range(1, 8):  # up to ~2+4+8+16+32+64+128=254s
+        try:
+            r = requests.post(BASE_URL + "/api/auth/login", json=ADMIN, timeout=10)
+            if r.ok and r.json().get("accessToken"):
+                return r.json().get("accessToken")
+            else:
+                print(f"[login] attempt {attempt} failed: {r.status_code} {r.text}")
+        except Exception as e:
+            print(f"[login] attempt {attempt} exception: {e}")
+        time.sleep(backoff)
+        backoff = min(backoff * 2, 60)
+    raise SystemExit("Cannot obtain admin token; API not ready?")
 
 
 def post_items(csv_path, url_path, transform):
@@ -19,9 +34,9 @@ def post_items(csv_path, url_path, transform):
         reader = csv.DictReader(f)
         for row in reader:
             payload = transform(row)
-            r = requests.post(BASE_URL + url_path, headers=headers, json=payload)
-            print(f"[{random.random()}]",r.status_code)
-            if (r.status_code != 200): # debug
+            r = requests.post(BASE_URL + url_path, headers=headers, json=payload, timeout=15)
+            print(f"[{random.random()}]", r.status_code)
+            if r.status_code >= 300:
                 print(r.text, payload)
 
 

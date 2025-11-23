@@ -1,3 +1,4 @@
+import os
 import requests
 import random
 from initial_seed import get_token
@@ -6,8 +7,8 @@ from generate_all_lecturers import generate_all_lecturers
 from generate_all_l_courses import generate_all_l_courses
 from generate_all_s_results import generate_all_s_results
 
-url = "http://localhost:8080"
-headers = {"Authorization": f"Bearer {get_token()}"}
+BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8080")
+headers = {"Authorization": f"Bearer {get_token()}", "Accept": "application/json"}
 all_students = generate_all_students()
 all_lecturers = generate_all_lecturers()
 
@@ -59,25 +60,25 @@ for lecturer in all_lecturers:
     })
 
 try:
-    r = requests.post(url + "/api/admin/catalog/students/batch", headers=headers, json=students_payload)
+    r = requests.post(BASE_URL + "/api/admin/catalog/students/batch", headers=headers, json=students_payload)
     print("Students batch:", r.status_code, r.text)
 except Exception as e:
     print("Exception sending students batch:", str(e))
 
 try:
-    r = requests.post(url + "/api/admin/catalog/lecturers/batch", headers=headers, json=lecturers_payload)
+    r = requests.post(BASE_URL + "/api/admin/catalog/lecturers/batch", headers=headers, json=lecturers_payload)
     print("Lecturers batch:", r.status_code, r.text)
 except Exception as e:
     print("Exception sending lecturers batch:", str(e))
 
 try:
-    r = requests.post(url + "/api/admin/catalog/lecturer-course-semesters/batch", headers=headers, json=lecturers_courses_payload)
+    r = requests.post(BASE_URL + "/api/admin/catalog/lecturer-course-semesters/batch", headers=headers, json=lecturers_courses_payload)
     print("courses batch:", r.status_code, r.text)
 except Exception as e:
     print("Exception sending courses batch:", str(e))
 
 try:
-    r = requests.post(url + "/api/admin/catalog/study-results/batch", headers=headers, json=student_results)
+    r = requests.post(BASE_URL + "/api/admin/catalog/study-results/batch", headers=headers, json=student_results)
     print("results batch:", r.status_code, r.text)
 except Exception as e:
     print("Exception sending results batch:", str(e))
@@ -85,7 +86,7 @@ except Exception as e:
 
 try:
     print("[+] this gonna take a long time since we need to wait for the brcypt for thousand of users")
-    r = requests.post(url + "/api/admin/catalog/users/batch", headers=headers, json=users_payload)
+    r = requests.post(BASE_URL + "/api/admin/catalog/users/batch", headers=headers, json=users_payload)
     print("Users batch:", r.status_code, r.text)
 except Exception as e:
     print("Exception sending users batch:", str(e))
