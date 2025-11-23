@@ -332,4 +332,53 @@ public class LecturerJdbcRepository {
         }
     }
 
+    public int insertResearch(String lecturerId,
+                              String studentId,
+                              String semesterId,
+                              String title,
+                              String description,
+                              @Nullable String attachment) {
+        String sql = """
+            INSERT INTO nghien_cuu_khoa_hoc
+                (ma_sv, ma_gv, ma_ky, mo_ta, ten_de_tai, trang_thai, ket_qua, file_dinh_kem)
+            VALUES (?, ?, ?, ?, ?, 'CHO_DUYET', NULL, ?)
+            """;
+        try (
+                Connection con = dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, studentId);
+            ps.setString(2, lecturerId);
+            ps.setString(3, semesterId);
+            ps.setString(4, description);
+            ps.setString(5, title);
+            if (attachment == null || attachment.isBlank()) {
+                ps.setNull(6, Types.VARCHAR);
+            } else {
+                ps.setString(6, attachment);
+            }
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("insertResearch(" + lecturerId + "," + studentId + "," + semesterId + ")", e);
+        }
+    }
+
+    public int deleteResearch(String lecturerId, String studentId, String semesterId) {
+        String sql = """
+            DELETE FROM nghien_cuu_khoa_hoc
+            WHERE ma_gv = ? AND ma_sv = ? AND ma_ky = ?
+            """;
+        try (
+                Connection con = dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, lecturerId);
+            ps.setString(2, studentId);
+            ps.setString(3, semesterId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("deleteResearch(" + lecturerId + "," + studentId + "," + semesterId + ")", e);
+        }
+    }
+
 }

@@ -246,4 +246,38 @@ public class LecturerService {
         return normSemester(semester);
     }
 
+    @Transactional
+    public void addResearch(String lecturerId,
+                            String studentId,
+                            String semesterId,
+                            String title,
+                            String description,
+                            @Nullable String attachment) throws SQLException {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        String maSv = normRequired(studentId, "Mã sinh viên").toUpperCase();
+        String maKy = normSemester(semesterId);
+        String tenDeTai = normRequired(title, "Tên đề tài");
+        String moTa = normRequired(description, "Mô tả");
+
+        if (studentRepo.findById(maSv).isEmpty()) {
+            throw new NotFoundException("Không tìm thấy sinh viên: " + maSv);
+        }
+        int affected = lecturerRepo.insertResearch(gvId, maSv, maKy, tenDeTai, moTa, attachment);
+        if (affected <= 0) {
+            throw new ValidationException("Không thể thêm đề tài.");
+        }
+    }
+
+    @Transactional
+    public void deleteResearch(String lecturerId, String studentId, String semesterId) {
+        String gvId = normRequired(lecturerId, "Mã giảng viên");
+        String maSv = normRequired(studentId, "Mã sinh viên").toUpperCase();
+        String maKy = normSemester(semesterId);
+
+        int affected = lecturerRepo.deleteResearch(gvId, maSv, maKy);
+        if (affected == 0) {
+            throw new NotFoundException("Không tìm thấy đề tài để xóa.");
+        }
+    }
+
 }

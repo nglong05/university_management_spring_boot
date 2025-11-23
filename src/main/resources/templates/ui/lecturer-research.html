@@ -28,9 +28,37 @@
 
         <form th:action="@{/ui/lecturer/research}" method="get" class="form">
             <label>Kỳ học (vd: 2025-1, để trống = tất cả)
-                <input type="text" name="semester" th:value="${semesterFilter}">
+                <input type="text" name="semester" th:value="${semesterFilter}"
+                       placeholder="VD: 2025-1"
+                       style="width:100%; max-width:200px; padding:10px 12px; border-radius:8px;">
             </label>
             <button type="submit">Lọc</button>
+        </form>
+
+        <form th:action="@{/ui/lecturer/research/add}" method="post" class="form" style="margin-top:12px;">
+            <div class="row" style="gap:10px; align-items:flex-end;">
+                <label style="flex:1 1 140px;">Mã SV
+                    <input name="maSv" placeholder="VD: B23DCTT019" required
+                           style="width:100%; padding:10px 12px; border-radius:8px;">
+                </label>
+                <label style="flex:1 1 140px;">Kỳ học
+                    <input name="maKy" placeholder="2025-1" required
+                           style="width:100%; padding:10px 12px; border-radius:8px;">
+                </label>
+            </div>
+            <label>Tiêu đề đề tài
+                <input name="tenDeTai" placeholder="Tên đề tài" required
+                       style="width:100%; padding:10px 12px; border-radius:8px;">
+            </label>
+            <label>Mô tả
+                <input name="moTa" placeholder="Tóm tắt nội dung" required
+                       style="width:100%; padding:10px 12px; border-radius:8px;">
+            </label>
+            <label>File đính kèm (tùy chọn)
+                <input name="fileDinhKem" placeholder="Link tài liệu" 
+                       style="width:100%; padding:10px 12px; border-radius:8px;">
+            </label>
+            <button type="submit">Thêm đề tài</button>
         </form>
 
         <p class="msg" style="color:#f97316" th:text="${researchError}"></p>
@@ -48,7 +76,7 @@
                     <th>Trạng thái</th>
                     <th>Nhận xét</th>
                     <th>Ngày đăng ký</th>
-                    <th>Cập nhật</th>
+                    <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,6 +102,12 @@
                             </select>
                             <input name="ketQua" placeholder="Nhận xét / kết quả" th:value="${rp.result}">
                             <button type="submit">Lưu</button>
+                        </form>
+                        <form th:action="@{/ui/lecturer/research/delete}" method="post" class="row" style="gap:8px; margin-top:6px;">
+                            <input type="hidden" name="maSv" th:value="${rp.studentId}">
+                            <input type="hidden" name="maKy" th:value="${rp.semesterId}">
+                            <input type="hidden" name="semester" th:value="${semesterFilter}">
+                            <button type="submit" class="danger">Xóa</button>
                         </form>
                     </td>
                 </tr>

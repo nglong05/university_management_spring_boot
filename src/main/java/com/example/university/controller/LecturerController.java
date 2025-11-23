@@ -167,4 +167,32 @@ public class LecturerController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/me/research-projects")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<?> addResearchProject(
+            @AuthenticationPrincipal AuthUser me,
+            @RequestBody java.util.Map<String, String> body
+    ) throws SQLException {
+        service.addResearch(
+                me.getLecturerId(),
+                body.get("maSv"),
+                body.get("maKy"),
+                body.get("tenDeTai"),
+                body.get("moTa"),
+                body.getOrDefault("fileDinhKem", null)
+        );
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/me/research-projects/{studentId}/{semesterId}")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<?> deleteResearchProject(
+            @AuthenticationPrincipal AuthUser me,
+            @PathVariable String studentId,
+            @PathVariable String semesterId
+    ) {
+        service.deleteResearch(me.getLecturerId(), studentId, semesterId);
+        return ResponseEntity.ok().build();
+    }
+
 }

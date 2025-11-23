@@ -426,6 +426,74 @@ public class UiController {
         return "ui/lecturer-research";
     }
 
+    @PostMapping("/lecturer/research/add")
+    public String addResearchProject(
+            @RequestParam String maSv,
+            @RequestParam String maKy,
+            @RequestParam String tenDeTai,
+            @RequestParam String moTa,
+            @RequestParam(required = false) String fileDinhKem,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            return "redirect:/ui/login";
+        }
+        try {
+            lecturerService.addResearch(ui, maSv, maKy, tenDeTai, moTa, fileDinhKem);
+            model.addAttribute("reviewOk", "Đã thêm đề tài mới.");
+            model.addAttribute("reviewError", null);
+        } catch (Exception e) {
+            model.addAttribute("reviewError", e.getMessage());
+            model.addAttribute("reviewOk", null);
+        }
+
+        model.addAttribute("session", ui);
+        try {
+            java.util.List<com.example.university.dto.ResearchProjectDTO> research =
+                    lecturerService.getMyResearchProjects(ui, null);
+            model.addAttribute("researchList", research);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+        }
+        model.addAttribute("semesterFilter", "");
+        return "ui/lecturer-research";
+    }
+
+    @PostMapping("/lecturer/research/delete")
+    public String deleteResearchProject(
+            @RequestParam String maSv,
+            @RequestParam String maKy,
+            @RequestParam(required = false, name = "semester") String filterSemester,
+            HttpSession session,
+            Model model
+    ) {
+        UiSession ui = requireLogin(session);
+        if (!ui.isLecturer()) {
+            return "redirect:/ui/login";
+        }
+        try {
+            lecturerService.deleteResearch(ui, maSv, maKy);
+            model.addAttribute("reviewOk", "Đã xóa đề tài.");
+            model.addAttribute("reviewError", null);
+        } catch (Exception e) {
+            model.addAttribute("reviewError", e.getMessage());
+            model.addAttribute("reviewOk", null);
+        }
+
+        model.addAttribute("session", ui);
+        try {
+            java.util.List<com.example.university.dto.ResearchProjectDTO> research =
+                    lecturerService.getMyResearchProjects(ui, filterSemester);
+            model.addAttribute("researchList", research);
+        } catch (Exception e) {
+            model.addAttribute("researchError", "Không tải được danh sách đề tài: " + e.getMessage());
+        }
+        model.addAttribute("semesterFilter", filterSemester == null ? "" : filterSemester);
+        return "ui/lecturer-research";
+    }
+
 
     @GetMapping("/lecturer/research")
     public String lecturerResearch(

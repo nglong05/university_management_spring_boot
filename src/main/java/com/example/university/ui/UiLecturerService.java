@@ -158,4 +158,46 @@ public class UiLecturerService {
         }
     }
 
+    public void addResearch(UiSession s,
+                            String maSv,
+                            String maKy,
+                            String tenDeTai,
+                            String moTa,
+                            String fileDinhKem) {
+        HttpEntity<java.util.Map<String, String>> entity = new HttpEntity<>(
+                java.util.Map.of(
+                        "maSv", maSv,
+                        "maKy", maKy,
+                        "tenDeTai", tenDeTai,
+                        "moTa", moTa,
+                        "fileDinhKem", fileDinhKem == null ? "" : fileDinhKem
+                ),
+                authHeaders(s)
+        );
+        ResponseEntity<String> resp = restTemplate.exchange(
+                "/api/lecturers/me/research-projects",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không thêm được đề tài");
+        }
+    }
+
+    public void deleteResearch(UiSession s, String maSv, String maKy) {
+        HttpEntity<Void> entity = new HttpEntity<>(authHeaders(s));
+        ResponseEntity<String> resp = restTemplate.exchange(
+                "/api/lecturers/me/research-projects/{sv}/{ky}",
+                HttpMethod.DELETE,
+                entity,
+                String.class,
+                maSv,
+                maKy
+        );
+        if (!resp.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Không xóa được đề tài");
+        }
+    }
+
 }
