@@ -19,16 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/**
- * Service nghiệp vụ cho Giảng viên:
- * - Kiểm tra quyền chấm (đã được phân công môn/kỳ?)
- * - Validate dữ liệu điểm
- * - Gọi repository để upsert điểm
- *
- * Quy ước:
- * - Điểm nằm [0..10], làm tròn 2 chữ số thập phân để khớp DECIMAL(4,2) ở DB.
- * - Mã kỳ học theo pattern ^\\d{4}-[12]$ (ví dụ 2024-1).
- */
 @Service
 @RequiredArgsConstructor
 public class LecturerService {
@@ -57,7 +47,7 @@ public class LecturerService {
         }
 
         // 3) Ghi điểm (ON DUPLICATE KEY UPDATE) – cột diem_tong_ket trong DB sẽ tự tính
-        int affected = lecturerRepo.upsertGrade(req);
+        int affected = lecturerRepo.upsertGrade(gvId, req);
         if (affected <= 0) {
             throw new ValidationException("Không thể lưu điểm. Vui lòng kiểm tra dữ liệu đầu vào.");
         }
@@ -169,10 +159,6 @@ public class LecturerService {
         req.setDiemGk(normScore(req.getDiemGk(), "Điểm giữa kỳ"));
         req.setDiemCk(normScore(req.getDiemCk(), "Điểm cuối kỳ"));
     }
-    /**
-     * Giảng viên xem danh sách đề tài NCKH của sinh viên đăng ký với mình.
-     * Có thể filter theo semester (ma_ky) và status (trang_thai).
-     */
     @Transactional
     public List<ResearchProjectDTO> listMyResearchProjects(
             String lecturerId,
@@ -206,9 +192,6 @@ public class LecturerService {
         }
     }
 
-    /**
-     * Giảng viên cập nhật trạng thái & nhận xét/ketQua cho 1 đề tài NCKH.
-     */
     @Transactional
     public void updateResearchStatus(String lecturerId, UpdateResearchStatusRequest req) {
         String gvId = normRequired(lecturerId, "Mã giảng viên");

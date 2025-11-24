@@ -8,7 +8,7 @@ def generate_all_lecturers():
 
     for dept in departments:
         dept_code = dept["ma_khoa"]
-        num_lecturers = random.randint(1, 3)
+        num_lecturers = random.randint(10, 15)
         print(f"generating {num_lecturers} lecturers for {dept['ten_khoa']} ({dept_code})")
         
         dept_lecturers = []

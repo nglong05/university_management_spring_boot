@@ -10,7 +10,7 @@ def generate_all_students():
 
     for dept in departments:
         dept_code = dept["ma_khoa"]
-        num_students = random.randint(10, 20)
+        num_students = random.randint(1800, 2000)
         print(f"generating {num_students} students for {dept['ten_khoa']} ({dept_code})")
         
         dept_students = []

@@ -66,10 +66,10 @@ public class LecturerJdbcRepository {
     }
 
     // update or insert a student's grade
-    public int upsertGrade(UpdateGradeRequest req) {
+    public int upsertGrade(String lecturerId, UpdateGradeRequest req) {
         String sql = """
-                    INSERT INTO ket_qua_hoc_tap (ma_sv, ma_mon, ma_ky, diem_qt, diem_gk, diem_ck)
-                    VALUES (?,?,?,?,?,?)
+                    INSERT INTO ket_qua_hoc_tap (ma_sv, ma_mon, ma_ky, ma_gv, diem_qt, diem_gk, diem_ck)
+                    VALUES (?,?,?,?,?,?,?)
                     ON DUPLICATE KEY UPDATE
                       diem_qt = COALESCE(VALUES(diem_qt), diem_qt),
                       diem_gk = COALESCE(VALUES(diem_gk), diem_gk),
@@ -82,9 +82,10 @@ public class LecturerJdbcRepository {
             ps.setString(1, req.getMaSv());
             ps.setString(2, req.getMaMon());
             ps.setString(3, req.getMaKy());
-            ps.setBigDecimal(4, req.getDiemQt());
-            ps.setBigDecimal(5, req.getDiemGk());
-            ps.setBigDecimal(6, req.getDiemCk());
+            ps.setString(4, lecturerId);
+            ps.setBigDecimal(5, req.getDiemQt());
+            ps.setBigDecimal(6, req.getDiemGk());
+            ps.setBigDecimal(7, req.getDiemCk());
             return ps.executeUpdate(); // return 1 (insert) or 2 (update)
         } catch (SQLException e) {
             throw new RuntimeException("upsertGrade(" + req + ")", e);
@@ -208,7 +209,6 @@ public class LecturerJdbcRepository {
             throw new RuntimeException("deleteStudentFromClass(" + studentId + "," + courseId + "," + semesterId + ")", e);
         }
     }
-    // Danh sách NCKH của SV do 1 giảng viên hướng dẫn (lọc theo kỳ nếu có)
     public List<ResearchProjectDTO> listResearchByLecturer(String lecturerId,
                                                            @Nullable String semesterId) {
         String base = """
@@ -274,10 +274,6 @@ public class LecturerJdbcRepository {
         return list;
     }
 
-    /**
-     * Cập nhật trạng thái + kết quả/nhận xét đề tài.
-     * Chỉ update nếu ma_gv trùng với lecturerId (đảm bảo chỉ chỉnh đề tài của mình).
-     */
     public int updateResearchStatus(
             String lecturerId,
             String studentId,

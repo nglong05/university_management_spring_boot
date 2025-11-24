@@ -59,15 +59,22 @@ CREATE TABLE IF NOT EXISTS sinh_vien (
     ngay_sinh     DATE         NOT NULL,
     gioi_tinh     ENUM('M','F','O') NOT NULL,
     dia_chi       VARCHAR(500),
-    so_dien_thoai VARCHAR(100),
     email         VARCHAR(100) UNIQUE,
-    -- ma_khoa       VARCHAR(100) NOT NULL,
     ma_nganh_hoc  VARCHAR(50)  NOT NULL,
     CONSTRAINT fk_sv_khoa FOREIGN KEY (ma_khoa)
     REFERENCES khoa(ma_khoa) ON UPDATE CASCADE,
     CONSTRAINT fk_sv_nganh FOREIGN KEY (ma_nganh_hoc)
     REFERENCES nganh_hoc(ma_nganh_hoc) ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS sinhvien_dienthoai (
+    ma_sv          VARCHAR(50) NOT NULL,
+    so_dien_thoai  VARCHAR(100) NOT NULL,
+    PRIMARY KEY (ma_sv, so_dien_thoai),
+    CONSTRAINT fk_sd_sv FOREIGN KEY (ma_sv)
+    REFERENCES sinh_vien(ma_sv) ON UPDATE CASCADE
+);
+
 
 CREATE TABLE IF NOT EXISTS giang_vien (
     ma_gv         VARCHAR(50)  PRIMARY KEY,

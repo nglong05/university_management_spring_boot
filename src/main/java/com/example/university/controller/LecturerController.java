@@ -59,6 +59,7 @@ public class LecturerController {
     ) {
         return service.getClassTranscript(me.getLecturerId(), courseId, semesterId);
     }
+
     @PostMapping("/me/courses/{courseId}/semesters/{semesterId}/students")
     @PreAuthorize("hasRole('LECTURER')")
     public ResponseEntity<?> addStudentToClass(
@@ -109,18 +110,13 @@ public class LecturerController {
                 me.getLecturerId(),
                 courseId,
                 semesterId,
-                me.getLecturerId(),                 // hiện dùng mã GV làm label
+                me.getLecturerId(),
                 response.getOutputStream()
         );
         response.flushBuffer();
     }
     // ================== NGHIÊN CỨU KHOA HỌC ==================
 
-    /**
-     * Giảng viên xem danh sách đề tài NCKH sinh viên đăng ký với mình.
-     * - semester: filter theo mã kỳ (optional)
-     * - status: filter theo trạng thái (optional)
-     */
     @GetMapping("/me/research-projects")
     @PreAuthorize("hasRole('LECTURER')")
     public ResponseEntity<?> myResearchProjects(
@@ -145,10 +141,6 @@ public class LecturerController {
     }
 
 
-    /**
-     * Giảng viên cập nhật trạng thái + nhận xét/ketQua cho 1 đề tài NCKH.
-     * Body: { "maSv": "...", "maKy": "2025-1", "trangThai": "DANG_LAM", "ketQua": "Nhận xét..." }
-     */
     @PutMapping("/me/research-projects/status")
     @PreAuthorize("hasRole('LECTURER')")
     public ResponseEntity<?> updateResearchStatus(
