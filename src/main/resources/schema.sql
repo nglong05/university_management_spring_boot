@@ -61,8 +61,6 @@ CREATE TABLE IF NOT EXISTS sinh_vien (
     dia_chi       VARCHAR(500),
     email         VARCHAR(100) UNIQUE,
     ma_nganh_hoc  VARCHAR(50)  NOT NULL,
-    CONSTRAINT fk_sv_khoa FOREIGN KEY (ma_khoa)
-    REFERENCES khoa(ma_khoa) ON UPDATE CASCADE,
     CONSTRAINT fk_sv_nganh FOREIGN KEY (ma_nganh_hoc)
     REFERENCES nganh_hoc(ma_nganh_hoc) ON UPDATE CASCADE
 );
